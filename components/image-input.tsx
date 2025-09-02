@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
 
 export function ImageInput({
   label,
@@ -11,6 +12,10 @@ export function ImageInput({
   onChange: (file: File | null, previewUrl: string | null) => void
 }) {
   const [error, setError] = useState<string | null>(null)
+
+  // Hidden inputs for separate flows
+  const cameraInputRef = useRef<HTMLInputElement | null>(null)
+  const galleryInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFile = (file: File | null) => {
     if (!file) {
@@ -22,6 +27,7 @@ export function ImageInput({
       onChange(null, null)
       return
     }
+    setError(null)
     const reader = new FileReader()
     reader.onload = () => {
       onChange(file, (reader.result as string) || null)
@@ -32,13 +38,39 @@ export function ImageInput({
   return (
     <div className="grid gap-2">
       <Label className="text-sm">{label}</Label>
+
+      {/* Hidden inputs */}
       <input
+        ref={cameraInputRef}
         type="file"
         accept="image/*"
         capture="environment"
         onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
-        className="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white hover:file:bg-blue-700"
+        className="hidden"
       />
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+        className="hidden"
+      />
+
+      {/* Action buttons */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Button type="button" onClick={() => cameraInputRef.current?.click()}>
+          Take photo
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => galleryInputRef.current?.click()}>
+          Choose from gallery
+        </Button>
+      </div>
+
+      {/* Optional small helper text */}
+      <p className="text-xs text-muted-foreground">
+        On phones, “Take photo” opens the camera. “Choose from gallery” lets you browse files.
+      </p>
+
       {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   )
