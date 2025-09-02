@@ -19,7 +19,7 @@ export function LeaderPhotoInput({
     if (choice === "pm") {
       onChange(null, "/images/pm-modi.png")
     } else if (choice === "gadkari") {
-      onChange(null, "/images/nitin-gadkari.png")
+      onChange(null, "/images/nitin-gadkari.jpg")
     } else if (choice === "url") {
       onChange(null, url || defaultUrl)
     } else {
