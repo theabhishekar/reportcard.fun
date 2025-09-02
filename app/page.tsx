@@ -46,7 +46,7 @@ export default function HomePage() {
   }, [issueImage])
 
   const canGenerate = useMemo(() => {
-    return Boolean(issueImage && leaderPreview && (locText || (coords.lat && coords.lng)))
+    return Boolean(issueImage && leaderPreview)
   }, [issueImage, leaderPreview, locText, coords])
 
   const handleGenerate = async () => {
@@ -58,7 +58,9 @@ export default function HomePage() {
       id,
       issueType,
       note: issueNote,
-      locationText: locText || `${coords.lat?.toFixed(6)}, ${coords.lng?.toFixed(6)}`,
+      locationText:
+        (locText && locText.trim()) ||
+        (coords.lat && coords.lng ? `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}` : "Not provided"),
       coords: coords.lat && coords.lng ? { lat: coords.lat, lng: coords.lng } : undefined,
       capturedAt: (dateTime ?? new Date()).toISOString(),
       issueImageFile: issueImage,
@@ -114,10 +116,10 @@ export default function HomePage() {
             )}
             <div className="text-sm text-gray-700">
               {isLocLoading
-                ? "Extracting GPS from EXIF or device location..."
+                ? "Extracting GPS from photo EXIF..."
                 : locText
                   ? `Detected location: ${locText}`
-                  : "Location not detected yet. You can still proceed."}
+                  : "Location not detected from photo metadata. You can still proceed."}
             </div>
           </CardContent>
         </Card>
@@ -156,14 +158,16 @@ export default function HomePage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="location-text">Location (editable)</Label>
+              <Label htmlFor="location-text">Location (optional)</Label>
               <Input
                 id="location-text"
                 placeholder="e.g., MG Road, Bengaluru"
                 value={locText}
                 onChange={(e) => setLocText(e.target.value)}
               />
-              <p className="text-xs text-gray-600">We try EXIF GPS or device location; you can refine this.</p>
+              <p className="text-xs text-gray-600">
+                Optional. We try to read GPS from the photo’s EXIF; you can refine or leave blank.
+              </p>
             </div>
 
             <div className="grid gap-2">
