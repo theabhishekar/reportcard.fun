@@ -23,7 +23,7 @@ export default function CivicHomePage() {
   const [leaderPreview, setLeaderPreview] = useState<string | null>("/images/pm-modi.png")
   const [issueType, setIssueType] = useState<IssueType>("Pothole")
   const [issueNote, setIssueNote] = useState<string>("")
-  const [creditName, setCreditName] = useState<string>("") // new optional field
+  const [creditName, setCreditName] = useState<string | "">("") // new optional field
   const [locText, setLocText] = useState<string>("")
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null })
   const [dateTime, setDateTime] = useState<Date | null>(null)
@@ -46,7 +46,8 @@ export default function CivicHomePage() {
   }, [issueImage])
 
   const canGenerate = useMemo(() => {
-    return Boolean(issueImage && leaderPreview && (locText || (coords.lat && coords.lng)))
+    // allow generation without location; only require issue image and a leader preview
+    return Boolean(issueImage && leaderPreview)
   }, [issueImage, leaderPreview, locText, coords])
 
   const handleGenerate = async () => {
@@ -58,7 +59,10 @@ export default function CivicHomePage() {
       id,
       issueType,
       note: issueNote,
-      locationText: locText || `${coords.lat?.toFixed(6)}, ${coords.lng?.toFixed(6)}`,
+      // provide a safe default when no location is supplied
+      locationText:
+        (locText && locText.trim()) ||
+        (coords.lat && coords.lng ? `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}` : "Not provided"),
       coords: coords.lat && coords.lng ? { lat: coords.lat, lng: coords.lng } : undefined,
       capturedAt: (dateTime ?? new Date()).toISOString(),
       issueImageFile: issueImage,
@@ -159,14 +163,16 @@ export default function CivicHomePage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="location-text">Location (editable)</Label>
+              <Label htmlFor="location-text">Location (optional)</Label>
               <Input
                 id="location-text"
                 placeholder="e.g., MG Road, Bengaluru"
                 value={locText}
                 onChange={(e) => setLocText(e.target.value)}
               />
-              <p className="text-xs text-gray-600">We try to read GPS from the photo’s EXIF. You can refine this.</p>
+              <p className="text-xs text-gray-600">
+                Optional. We try to read GPS from the photo’s EXIF; you can refine or leave blank.
+              </p>
             </div>
 
             <div className="grid gap-2">
