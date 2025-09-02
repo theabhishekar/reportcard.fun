@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Label } from "@/components/ui/label"
+import { StateCMPicker } from "@/components/state-cm-picker"
 
 export function LeaderPhotoInput({
   defaultUrl,
@@ -10,11 +11,11 @@ export function LeaderPhotoInput({
   defaultUrl: string
   onChange: (file: File | null, previewUrl: string | null) => void
 }) {
-  // three choices: 'pm' | 'gadkari' | 'custom' | 'url'
-  const [choice, setChoice] = useState<"pm" | "gadkari" | "custom" | "url">("pm")
+  // three choices: 'pm' | 'gadkari' | 'custom' | 'url' | 'statecm'
+  const [choice, setChoice] = useState<"pm" | "gadkari" | "custom" | "url" | "statecm">("pm")
   const [url, setUrl] = useState<string>("")
 
-  // reflect current choice into preview
+  // reflect current choice into preview (statecm is handled by the picker)
   useEffect(() => {
     if (choice === "pm") {
       onChange(null, "/images/pm-modi.png")
@@ -22,6 +23,10 @@ export function LeaderPhotoInput({
       onChange(null, "/images/nitin-gadkari.jpg")
     } else if (choice === "url") {
       onChange(null, url || defaultUrl)
+    } else if (choice === "custom") {
+      // Do nothing here; handled by file input.
+    } else if (choice === "statecm") {
+      // Do nothing here; the StateCMPicker below will call onChange when the user selects a CM.
     } else {
       onChange(null, defaultUrl)
     }
@@ -30,11 +35,7 @@ export function LeaderPhotoInput({
 
   const handleFile = (file: File | null) => {
     if (choice !== "custom") return
-    if (!file) {
-      onChange(null, defaultUrl)
-      return
-    }
-    if (!file.type.startsWith("image/")) {
+    if (!file || !file.type.startsWith("image/")) {
       onChange(null, defaultUrl)
       return
     }
@@ -60,6 +61,7 @@ export function LeaderPhotoInput({
           />
           <span>PM Narendra Modi</span>
         </label>
+
         <label className="inline-flex items-center gap-2">
           <input
             type="radio"
@@ -70,6 +72,18 @@ export function LeaderPhotoInput({
           />
           <span>Nitin Gadkari</span>
         </label>
+
+        <label className="inline-flex items-center gap-2">
+          <input
+            type="radio"
+            name="leader-choice"
+            value="statecm"
+            checked={choice === "statecm"}
+            onChange={() => setChoice("statecm")}
+          />
+          <span>State CM (choose state)</span>
+        </label>
+
         <label className="inline-flex items-center gap-2">
           <input
             type="radio"
@@ -80,6 +94,7 @@ export function LeaderPhotoInput({
           />
           <span>Custom upload</span>
         </label>
+
         <label className="inline-flex items-center gap-2">
           <input
             type="radio"
@@ -103,6 +118,17 @@ export function LeaderPhotoInput({
         />
       )}
 
+      {/* State CM picker (enabled only when 'statecm' is selected) */}
+      {choice === "statecm" && (
+        <StateCMPicker
+          className="mt-1"
+          onSelect={(imgSrc /*, cmName*/) => {
+            // We keep the existing API: emit only image URL. User can fill credit name separately.
+            onChange(null, imgSrc)
+          }}
+        />
+      )}
+
       {/* Custom upload (enabled only when 'custom' is selected) */}
       <input
         type="file"
@@ -111,9 +137,10 @@ export function LeaderPhotoInput({
         onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
         className="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white hover:file:bg-blue-700 disabled:opacity-50"
       />
+
       <p className="text-xs text-gray-600">
-        Choose a default, paste a URL, or switch to Custom to upload your own. Note: Some remote URLs may block
-        cross-origin loading.
+        Choose a default, pick a State CM, paste a URL, or switch to Custom to upload your own. Note: Some remote URLs
+        may block cross-origin loading; Wikipedia images usually work with canvas.
       </p>
     </div>
   )
