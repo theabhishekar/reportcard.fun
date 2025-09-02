@@ -94,3 +94,28 @@ export const CM_WIKI_TITLE_BY_STATE: Record<IndianState, string> = {
   Uttarakhand: "Pushkar Singh Dhami",
   "West Bengal": "Mamata Banerjee",
 }
+
+// Union Territories support: list + (partial) CM mappings and wiki titles
+export const INDIAN_UNION_TERRITORIES = [
+  "Delhi",
+  "Puducherry",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Chandigarh",
+  "Andaman and Nicobar Islands",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Lakshadweep",
+] as const
+
+export type IndianUT = (typeof INDIAN_UNION_TERRITORIES)[number]
+
+// Only UTs that currently have a CM (others are administered differently)
+export const CM_NAME_BY_UT: Partial<Record<IndianUT, string>> = {
+  Delhi: "Arvind Kejriwal",
+  Puducherry: "N. Rangaswamy",
+}
+
+export const CM_WIKI_TITLE_BY_UT: Partial<Record<IndianUT, string>> = {
+  Delhi: "Arvind_Kejriwal",
+  Puducherry: "N._Rangaswamy",
+}

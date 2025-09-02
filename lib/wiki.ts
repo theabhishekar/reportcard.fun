@@ -35,3 +35,8 @@ export async function fetchWikiLeadImage(titleOrQuery: string, size = 600): Prom
   if (direct.imageUrl) return direct
   return fetchPageImagesBySearch(titleOrQuery, size)
 }
+
+export async function getWikipediaLeadImageUrl(titleOrQuery: string, size = 600): Promise<string | undefined> {
+  const { imageUrl } = await fetchWikiLeadImage(titleOrQuery, size)
+  return imageUrl
+}

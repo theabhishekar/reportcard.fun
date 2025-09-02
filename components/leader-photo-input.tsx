@@ -81,7 +81,7 @@ export function LeaderPhotoInput({
             checked={choice === "statecm"}
             onChange={() => setChoice("statecm")}
           />
-          <span>State CM (choose state)</span>
+          <span>State/UT CM (choose region)</span>
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -139,8 +139,8 @@ export function LeaderPhotoInput({
       />
 
       <p className="text-xs text-gray-600">
-        Choose a default, pick a State CM, paste a URL, or switch to Custom to upload your own. Note: Some remote URLs
-        may block cross-origin loading; Wikipedia images usually work with canvas.
+        Choose a default, pick a State/UT CM, paste a URL, or switch to Custom to upload your own. Note: Some remote
+        URLs may block cross-origin loading; Wikipedia images usually work with canvas.
       </p>
     </div>
   )

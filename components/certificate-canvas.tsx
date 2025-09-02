@@ -89,13 +89,23 @@ export const CertificateCanvas = forwardRef<
           ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize)
         } catch {}
 
+        // Center the header text so it doesn't get covered by the logo
         ctx.fillStyle = "#FFFFFF"
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"
+        const centerX = headerLeft + headerWidth / 2
+
         ctx.font = "bold 28px system-ui, -apple-system, Segoe UI, Roboto"
-        const headerTextY1 = headerTop + Math.floor(headerH / 2) - 10
-        const headerTextY2 = headerTextY1 + 28
-        ctx.fillText("People of India", headerLeft + 90 + 20, headerTextY1)
+        const headerTextY1 = headerTop + Math.floor(headerH / 2) - 12
+        ctx.fillText("People of India", centerX, headerTextY1)
+
         ctx.font = "600 20px system-ui, -apple-system, Segoe UI, Roboto"
-        ctx.fillText("भारत के लोग", headerLeft + 90 + 20, headerTextY2)
+        const headerTextY2 = headerTextY1 + 28
+        ctx.fillText("भारत के लोग", centerX, headerTextY2)
+
+        // Restore left alignment for the rest of the canvas drawing
+        ctx.textAlign = "left"
+        ctx.textBaseline = "alphabetic"
 
         // Title (shifted down by headerDelta)
         ctx.fillStyle = textColor
