@@ -23,8 +23,9 @@ export const CertificateCanvas = forwardRef<
   {
     data: CertificateData
     onRendered?: (dataUrl: string | null) => void
+    logoScale?: number
   }
->(({ data, onRendered }, ref) => {
+>(({ data, onRendered, logoScale }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useImperativeHandle(ref, () => canvasRef.current!)
 
@@ -63,8 +64,12 @@ export const CertificateCanvas = forwardRef<
         // Seal (safe fallback)
         try {
           const sealImg = await loadImage("/images/gov-seal.png")
-          const sealSize = 56
-          ctx.drawImage(sealImg, 40, 32, sealSize, sealSize)
+          const baseSeal = 56
+          const scale = logoScale && logoScale > 0 ? logoScale : 1.5
+          const sealSize = Math.min(Math.round(baseSeal * scale), 80 - 8)
+          const sealX = 40
+          const sealY = 20 + (80 - sealSize) / 2
+          ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize)
         } catch {}
 
         // Header text bilingual
@@ -211,7 +216,7 @@ export const CertificateCanvas = forwardRef<
 
     void draw()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(data)])
+  }, [JSON.stringify(data), logoScale])
 
   return <canvas ref={canvasRef} className="w-full h-auto rounded border" aria-label="Generated certificate" />
 })
