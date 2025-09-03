@@ -33,7 +33,7 @@ export const INDIAN_STATES = [
 export type IndianState = (typeof INDIAN_STATES)[number]
 
 export const CM_NAME_BY_STATE: Record<IndianState, string> = {
-  "Andhra Pradesh": "N. Chandrababu Naidu",
+  "Andhra Pradesh": "Y. S. Jagan Mohan Reddy", // Updated
   "Arunachal Pradesh": "Pema Khandu",
   Assam: "Himanta Biswa Sarma",
   Bihar: "Nitish Kumar",
@@ -51,12 +51,12 @@ export const CM_NAME_BY_STATE: Record<IndianState, string> = {
   Meghalaya: "Conrad Sangma",
   Mizoram: "Lalduhoma",
   Nagaland: "Neiphiu Rio",
-  Odisha: "Mohan Charan Majhi",
+  Odisha: "Naveen Patnaik", // Updated
   Punjab: "Bhagwant Mann",
   Rajasthan: "Bhajan Lal Sharma",
   Sikkim: "Prem Singh Tamang",
   "Tamil Nadu": "M. K. Stalin",
-  Telangana: "Revanth Reddy",
+  Telangana: "A. Revanth Reddy", // Updated with full name
   Tripura: "Manik Saha",
   "Uttar Pradesh": "Yogi Adityanath",
   Uttarakhand: "Pushkar Singh Dhami",
@@ -65,7 +65,7 @@ export const CM_NAME_BY_STATE: Record<IndianState, string> = {
 
 // Wikipedia titles (some differ from display names)
 export const CM_WIKI_TITLE_BY_STATE: Record<IndianState, string> = {
-  "Andhra Pradesh": "N. Chandrababu Naidu",
+  "Andhra Pradesh": "Y. S. Jagan Mohan Reddy", // Updated
   "Arunachal Pradesh": "Pema Khandu",
   Assam: "Himanta Biswa Sarma",
   Bihar: "Nitish Kumar",
@@ -83,12 +83,12 @@ export const CM_WIKI_TITLE_BY_STATE: Record<IndianState, string> = {
   Meghalaya: "Conrad Sangma",
   Mizoram: "Lalduhoma",
   Nagaland: "Neiphiu Rio",
-  Odisha: "Mohan Charan Majhi",
+  Odisha: "Naveen Patnaik", // Updated
   Punjab: "Bhagwant Mann",
   Rajasthan: "Bhajan Lal Sharma",
   Sikkim: "Prem Singh Tamang",
   "Tamil Nadu": "M. K. Stalin",
-  Telangana: "Revanth Reddy",
+  Telangana: "A. Revanth Reddy", // Updated with full name
   Tripura: "Manik Saha",
   "Uttar Pradesh": "Yogi Adityanath",
   Uttarakhand: "Pushkar Singh Dhami",
@@ -111,11 +111,13 @@ export type IndianUT = (typeof INDIAN_UNION_TERRITORIES)[number]
 
 // Only UTs that currently have a CM (others are administered differently)
 export const CM_NAME_BY_UT: Partial<Record<IndianUT, string>> = {
-  Delhi: "Arvind Kejriwal",
-  Puducherry: "N. Rangaswamy",
+  Delhi: "Rekha Gupta", // Updated
+  Puducherry: "N. Rangasamy",
+  "Jammu and Kashmir": "Manoj Sinha", // LG
 }
 
 export const CM_WIKI_TITLE_BY_UT: Partial<Record<IndianUT, string>> = {
-  Delhi: "Arvind_Kejriwal",
-  Puducherry: "N._Rangaswamy",
+  Delhi: "Rekha_Gupta_(politician)", // Updated with disambiguation
+  Puducherry: "N._Rangasamy",
+  "Jammu and Kashmir": "Manoj_Sinha",
 }

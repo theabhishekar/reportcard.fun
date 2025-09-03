@@ -12,6 +12,8 @@ export type Language = {
     noteLabel: string
     footerText: string
     scanQrText: string
+    slogan: string
+    impactText: string
     // Form labels
     selectIssueType: string
     enterLocation: string
@@ -37,6 +39,8 @@ export const languages: Language[] = [
       noteLabel: 'Note',
       footerText: 'This certificate documents a civic issue reported by a citizen.',
       scanQrText: 'Scan to view report\nरिपोर्ट देखने हेतु स्कैन करें',
+      slogan: 'Your Voice Matters / आपकी आवाज़ महत्वपूर्ण है',
+      impactText: 'Together for Better Communities / बेहतर समुदाय के लिए एकजुट',
       selectIssueType: 'Select Issue Type / समस्या का चयन करें',
       enterLocation: 'Enter Location / स्थान दर्ज करें',
       addNote: 'Add Note (Optional) / नोट जोड़ें (वैकल्पिक)',
@@ -59,6 +63,8 @@ export const languages: Language[] = [
       noteLabel: 'குறிப்பு',
       footerText: 'இந்த சான்றிதழ் ஒரு குடிமகனால் புகாரளிக்கப்பட்ட குடிமைப் பிரச்சனையை ஆவணப்படுத்துகிறது.',
       scanQrText: 'அறிக்கையைப் பார்க்க ஸ்கேன் செய்யவும்',
+      slogan: 'உங்கள் குரல் முக்கியம்',
+      impactText: 'சிறந்த சமூகங்களுக்காக இணைந்து செயல்படுவோம்',
       selectIssueType: 'பிரச்சனை வகையைத் தேர்ந்தெடுக்கவும்',
       enterLocation: 'இடத்தை உள்ளிடவும்',
       addNote: 'குறிப்பு சேர்க்கவும் (விருப்பம்)',
@@ -81,6 +87,8 @@ export const languages: Language[] = [
       noteLabel: 'గమనిక',
       footerText: 'ఈ ధృవీకరణ పత్రం ఒక పౌరుడు నివేదించిన పౌర సమస్యను దస్తావేజు చేస్తుంది.',
       scanQrText: 'నివేదికను చూడటానికి స్కాన్ చేయండి',
+      slogan: 'మీ స్వరం విలువైనది',
+      impactText: 'మెరుగైన సమాజం కోసం కలిసి పనిచేద్దాం',
       selectIssueType: 'సమస్య రకాన్ని ఎంచుకోండి',
       enterLocation: 'ప్రదేశాన్ని నమోదు చేయండి',
       addNote: 'గమనికను జోడించండి (ఐచ్ఛికం)',
@@ -103,6 +111,8 @@ export const languages: Language[] = [
       noteLabel: 'নোট',
       footerText: 'এই সনদপত্রটি একজন নাগরিকের দ্বারা রিপোর্ট করা একটি নাগরিক সমস্যার দলিল।',
       scanQrText: 'রিপোর্ট দেখতে স্ক্যান করুন',
+      slogan: 'আপনার কণ্ঠস্বর গুরুত্বপূর্ণ',
+      impactText: 'উন্নত সমাজের জন্য একসাথে কাজ করি',
       selectIssueType: 'সমস্যার ধরন নির্বাচন করুন',
       enterLocation: 'স্থান লিখুন',
       addNote: 'নোট যোগ করুন (ঐচ্ছিক)',
@@ -125,6 +135,8 @@ export const languages: Language[] = [
       noteLabel: 'टीप',
       footerText: 'हे प्रमाणपत्र एका नागरिकाने नोंदवलेल्या नागरी समस्येचे दस्तऐवजीकरण करते.',
       scanQrText: 'अहवाल पाहण्यासाठी स्कॅन करा',
+      slogan: 'तुमचा आवाज महत्त्वाचा आहे',
+      impactText: 'चांगल्या समाजासाठी एकत्र',
       selectIssueType: 'समस्येचा प्रकार निवडा',
       enterLocation: 'स्थान प्रविष्ट करा',
       addNote: 'टीप जोडा (पर्यायी)',

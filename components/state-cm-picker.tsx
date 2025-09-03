@@ -14,7 +14,7 @@ import {
 import { fetchWikiLeadImage } from "@/lib/wiki"
 
 type Props = {
-  onSelect: (imageSrc: string, creditName?: string) => void
+  onSelect: (imageSrc: string, previewUrl?: string | null, name?: string) => void
   className?: string
 }
 
@@ -145,7 +145,7 @@ export function StateCMPicker({ onSelect, className }: Props) {
             </div>
             <button
               type="button"
-              onClick={() => result.imageUrl && onSelect(result.imageUrl, result.name)}
+              onClick={() => result.imageUrl && onSelect(result.imageUrl, undefined, result.name)}
               disabled={!result.imageUrl}
               className="rounded-md bg-green-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
             >

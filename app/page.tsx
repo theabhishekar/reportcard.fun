@@ -27,9 +27,9 @@ type LeaderOption = {
 }
 
 const LEADER_OPTIONS: LeaderOption[] = [
-  { key: "modi", label: "PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
-  { key: "gadkari", label: "Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
-  { key: "cm", label: "State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
+  { key: "modi", label: "Hon' PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
+  { key: "gadkari", label: "Hon' Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
+  { key: "cm", label: "Hon' State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
 ]
 
 export default function HomePage() {
@@ -41,6 +41,7 @@ export default function HomePage() {
   const [issueNote, setIssueNote] = useState<string>("")
   const [creditName, setCreditName] = useState<string>("") // new optional field
   const [locText, setLocText] = useState<string>("")
+  const [locationMapUrl, setLocationMapUrl] = useState<string>("")
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null })
   const [dateTime, setDateTime] = useState<Date | null>(null)
     const [localDateTime, setLocalDateTime] = useState<string>("")
@@ -49,6 +50,7 @@ export default function HomePage() {
     const [selectedLeaders, setSelectedLeaders] = useState<string[]>(["modi"])
     // For CM custom image
     const [cmImage, setCmImage] = useState<string>("/images/leader-default.png")
+  const [selectedCMName, setSelectedCMName] = useState<string>("")
   const [certData, setCertData] = useState<CertificateData | null>(null)
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null) // data URL of canvas
   const [reportUrl, setReportUrl] = useState<string | null>(null) // app link used for QR / tweet
@@ -82,14 +84,14 @@ export default function HomePage() {
     const url = `/report/${id}` // Just the path, domain handled in SocialShare;
 
     // Build top leaders array
-    const topLeaders: string[] = selectedLeaders
+    const topLeaders = selectedLeaders
       .filter((key) => key !== "modi") // exclude Modi from top, always at bottom
       .map((key) => {
-        if (key === "cm") return cmImage;
+        if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
         const found = LEADER_OPTIONS.find((opt) => opt.key === key);
-        return found ? found.imageUrl : "";
+        return found ? { url: found.imageUrl, name: found.label } : null;
       })
-      .filter(Boolean);
+      .filter((leader): leader is { url: string; name: string } => Boolean(leader));
 
     // Always include Modi at bottom left
     const modiImage = LEADER_OPTIONS.find((opt) => opt.key === "modi")?.imageUrl || "/images/pm-modi.png";
@@ -104,9 +106,11 @@ export default function HomePage() {
       coords: coords.lat && coords.lng ? { lat: coords.lat, lng: coords.lng } : undefined,
       capturedAt: (dateTime ?? new Date()).toISOString(),
       issueImageFile: issueImage,
-      topLeaderImageUrls: topLeaders,
+      topLeaderImageUrls: topLeaders.map(l => l.url),
+      topLeaderNames: topLeaders.map(l => l.name),
       modiImageUrl: modiImage,
       reportUrl: url,
+      locationMapUrl: locationMapUrl || undefined,
       footerCreditName: creditName || undefined,
     };
     setCertData(data);
@@ -215,6 +219,20 @@ export default function HomePage() {
             </div>
 
             <div className="grid gap-2">
+              <Label htmlFor="maps-url">Google Maps Location (Optional)</Label>
+              <Input
+                id="maps-url"
+                type="url"
+                placeholder="Paste Google Maps URL"
+                value={locationMapUrl}
+                onChange={(e) => setLocationMapUrl(e.target.value)}
+              />
+              <p className="text-xs text-gray-600">
+                If provided, the QR code will point to this Google Maps location instead of the dummy report URL.
+              </p>
+            </div>
+
+            <div className="grid gap-2">
               <Label>Capture Time</Label>
                 <div className="text-sm">{localDateTime}</div>
             </div>
@@ -255,34 +273,43 @@ export default function HomePage() {
                       }}
                     />
                     <span className="text-sm">{opt.label}</span>
-                    <img 
-                      src={opt.imageUrl} 
-                      alt={opt.label}
-                      className="h-8 w-8 rounded-full object-cover border ml-2"
-                    />
+                    <div className="flex flex-col items-center ml-2">
+                      <img 
+                        src={opt.imageUrl} 
+                        alt={opt.label}
+                        className="h-8 w-8 rounded-full object-cover border"
+                      />
+                      {opt.key === "gadkari" && (
+                        <span className="text-xs text-red-600 font-medium">Nitin Gadkari</span>
+                      )}
+                    </div>
                   </label>
                 ))}
               </div>
             </div>
 
-            {selectedLeaders.includes("cm") && (
+              {selectedLeaders.includes("cm") && (
               <div className="space-y-2">
                 <Label className="text-sm">Select State/UT CM Photo</Label>
                 <LeaderPhotoInput
                   defaultUrl="/images/leader-default.png"
-                  onChange={(_, preview) => setCmImage(preview || "/images/leader-default.png")}
+                  onChange={(_: File | null, preview: string | null, name?: string) => {
+                    setCmImage(preview || "/images/leader-default.png");
+                    if (name) setSelectedCMName(name);
+                  }}
                 />
                 {cmImage && (
-                  <img
-                    src={cmImage}
-                    alt="CM preview"
-                    className="h-24 w-24 rounded object-cover border"
-                  />
+                  <div className="space-y-1">
+                    <img
+                      src={cmImage}
+                      alt="CM preview"
+                      className="h-24 w-24 rounded object-cover border"
+                    />
+                    <div className="text-sm text-red-600 font-medium">Selected State/UT CM</div>
+                  </div>
                 )}
               </div>
-            )}
-
-            <p className="text-xs text-gray-600">
+            )}            <p className="text-xs text-gray-600">
               Note: PM Modi's photo will always appear at the bottom left of the certificate (4x larger).
               Select additional leaders to appear at the top right.
             </p>
@@ -304,6 +331,7 @@ export default function HomePage() {
               setIssueNote("")
               setCreditName("") // reset credit name
               setLocText("")
+              setLocationMapUrl("")
               setCoords({ lat: null, lng: null })
               setDateTime(null)
               setCertData(null)
@@ -344,12 +372,18 @@ export default function HomePage() {
                   />
                 )}
               </div>
-              {reportUrl && (
+              {(reportUrl || locationMapUrl) && (
                 <p className="text-xs text-gray-600">
                   QR links to:{" "}
-                  <a className="text-blue-600 underline" href={reportUrl}>
-                    {reportUrl}
-                  </a>{" "}
+                  {locationMapUrl ? (
+                    <a className="text-blue-600 underline" href={locationMapUrl}>
+                      Google Maps Location
+                    </a>
+                  ) : (
+                    <a className="text-blue-600 underline" href={reportUrl || '#'}>
+                      {reportUrl}
+                    </a>
+                  )}{" "}
                   — demo only, no backend yet.
                 </p>
               )}

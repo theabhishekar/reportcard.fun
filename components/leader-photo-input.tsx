@@ -9,7 +9,7 @@ export function LeaderPhotoInput({
   onChange,
 }: {
   defaultUrl: string
-  onChange: (file: File | null, previewUrl: string | null) => void
+  onChange: (file: File | null, previewUrl: string | null, name?: string) => void
 }) {
   // three choices: 'pm' | 'gadkari' | 'custom' | 'url' | 'statecm'
   const [choice, setChoice] = useState<"pm" | "gadkari" | "custom" | "url" | "statecm">("pm")
@@ -18,9 +18,9 @@ export function LeaderPhotoInput({
   // reflect current choice into preview (statecm is handled by the picker)
   useEffect(() => {
     if (choice === "pm") {
-      onChange(null, "/images/pm-modi.png")
+      onChange(null, "/images/pm-modi.png", "Hon' PM Narendra Modi")
     } else if (choice === "gadkari") {
-      onChange(null, "/images/nitin-gadkari.jpg")
+      onChange(null, "/images/nitin-gadkari.jpg", "Hon' Nitin Gadkari")
     } else if (choice === "url") {
       onChange(null, url || defaultUrl)
     } else if (choice === "custom") {
@@ -59,7 +59,7 @@ export function LeaderPhotoInput({
             checked={choice === "pm"}
             onChange={() => setChoice("pm")}
           />
-          <span>PM Narendra Modi</span>
+          <span>Hon' PM Narendra Modi</span>
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -70,7 +70,7 @@ export function LeaderPhotoInput({
             checked={choice === "gadkari"}
             onChange={() => setChoice("gadkari")}
           />
-          <span>Nitin Gadkari</span>
+          <span>Hon' Nitin Gadkari</span>
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -81,7 +81,7 @@ export function LeaderPhotoInput({
             checked={choice === "statecm"}
             onChange={() => setChoice("statecm")}
           />
-          <span>State/UT CM (choose region)</span>
+          <span>Hon' State/UT CM (choose region)</span>
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -122,9 +122,9 @@ export function LeaderPhotoInput({
       {choice === "statecm" && (
         <StateCMPicker
           className="mt-1"
-          onSelect={(imgSrc /*, cmName*/) => {
-            // We keep the existing API: emit only image URL. User can fill credit name separately.
-            onChange(null, imgSrc)
+          onSelect={(imgSrc: string, previewUrl: string | null, cmName?: string) => {
+            // Pass both image URL and CM name with Hon' prefix
+            onChange(null, imgSrc, cmName ? `Hon' ${cmName}` : undefined)
           }}
         />
       )}
