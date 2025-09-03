@@ -90,7 +90,10 @@ export default function CivicHomePage() {
     <main className="min-h-dvh bg-white text-gray-900">
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
         <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-balance">Civic Issue Reporter</h1>
+          <h1 className="text-lg font-semibold text-balance">
+            reportcard.fun
+            <span className="text-sm font-normal text-gray-600 ml-2">(Civic Issue Reporter)</span>
+          </h1>
           <nav className="flex items-center gap-3">
             <a className="text-sm text-blue-600 hover:underline" href="/admin">
               Admin
