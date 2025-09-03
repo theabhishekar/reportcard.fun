@@ -9,9 +9,11 @@ export type CertificateData = {
   note?: string
   locationText: string
   coords?: { lat: number; lng: number }
+  locationMapUrl?: string // Optional Google Maps URL
   capturedAt: string // ISO
   issueImageFile: File
   topLeaderImageUrls: string[] // array of leader images for top right
+  topLeaderNames: string[] // array of leader names matching the images
   modiImageUrl: string // always present, bottom left
   reportUrl: string
   footerCreditName?: string // optional credit line in footer
@@ -122,11 +124,11 @@ export const CertificateCanvas = forwardRef<
         ctx.fillText(t.translations.title, 40, 140 + headerDelta)
         ctx.font = "600 22px system-ui, -apple-system, Segoe UI, Roboto"
         ctx.fillText(t.translations.subtitle, 40, 170 + headerDelta)
-
+        
         // Top right: multiple leader photos side by side
-        const topLeaderW = 100
+        const topLeaderW = 110  // Increased width for photo container
         const topLeaderH = 120
-        const topLeaderGap = 16
+        const topLeaderGap = 24  // Increased gap between photos
         const topStartX = width - 40 - (data.topLeaderImageUrls.length * (topLeaderW + topLeaderGap)) + topLeaderGap
         const topY = 110 + headerDelta
         for (let i = 0; i < data.topLeaderImageUrls.length; i++) {
@@ -137,7 +139,22 @@ export const CertificateCanvas = forwardRef<
           ctx.strokeRect(x, topY, topLeaderW, topLeaderH)
           try {
             const leaderImg = await loadImage(imgUrl)
-            ctx.drawImage(leaderImg, x + 5, topY + 5, topLeaderW - 10, topLeaderH - 10)
+            ctx.drawImage(leaderImg, x + 5, topY + 5, topLeaderW - 10, topLeaderH - 20)
+            
+            // Add name under photo in red
+            if (imgUrl.includes("gadkari")) {
+              ctx.fillStyle = "#DC2626" // red-600
+              ctx.font = "600 14px system-ui, -apple-system, Segoe UI, Roboto" // Increased font size
+              ctx.textAlign = "center"
+              ctx.fillText("Hon' Nitin Gadkari", x + topLeaderW/2, topY + topLeaderH - 6) // Adjusted position
+              ctx.textAlign = "left"
+            } else if (data.topLeaderNames?.[i]) { // Use name from data if available
+              ctx.fillStyle = "#DC2626" // red-600
+              ctx.font = "600 14px system-ui, -apple-system, Segoe UI, Roboto" // Increased font size
+              ctx.textAlign = "center"
+              ctx.fillText(data.topLeaderNames[i], x + topLeaderW/2, topY + topLeaderH - 6) // Adjusted position
+              ctx.textAlign = "left"
+            }
           } catch {
             ctx.fillStyle = "#F3F4F6"
             ctx.fillRect(x + 5, topY + 5, topLeaderW - 10, topLeaderH - 10)
@@ -164,9 +181,20 @@ export const CertificateCanvas = forwardRef<
           wrapText(ctx, `${t.translations.noteLabel}: ${data.note}`, 40, 298 + headerDelta, width - 80)
         }
 
+        // Slogans between issue details and photo
+        const sloganY = data.note ? 340 + headerDelta : 320 + headerDelta
+        
+        ctx.fillStyle = "#2563EB" // blue-600
+        ctx.font = "italic 600 18px system-ui, -apple-system, Segoe UI, Roboto"
+        ctx.textAlign = "center"
+        ctx.fillText(t.translations.slogan, width/2, sloganY)
+        ctx.font = "italic 600 16px system-ui, -apple-system, Segoe UI, Roboto"
+        ctx.fillText(t.translations.impactText, width/2, sloganY + 26)
+        ctx.textAlign = "left"
+
         // Issue image (shifted down by headerDelta)
         const photoX = 40
-        const photoY = 350 + headerDelta
+        const photoY = sloganY + 60 // Adjust photo position to account for slogans
         const photoW = width - 80
         ctx.strokeStyle = border
         ctx.lineWidth = 2
@@ -239,9 +267,11 @@ export const CertificateCanvas = forwardRef<
           ctx.fillText("PM Modi", modiX + 80, modiY + 160)
         }
 
-        // QR code at bottom right
+                    // QR code at bottom right
         try {
-          const qrDataUrl = await QRCode.toDataURL(data.reportUrl, { margin: 0, scale: 6 })
+          // Use Maps URL if available, otherwise use report URL
+          const qrUrl = data.locationMapUrl || data.reportUrl
+          const qrDataUrl = await QRCode.toDataURL(qrUrl, { margin: 0, scale: 6 })
           const qrImg = await loadImage(qrDataUrl)
           const qrSize = 160 // Slightly larger QR
           const qrX = width - bottomPadding - qrSize
@@ -262,14 +292,20 @@ export const CertificateCanvas = forwardRef<
           ctx.font = "500 14px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.textAlign = "center"
           const centerX = qrX + qrSize/2
-          const lines = t.translations.scanQrText.split("\n")
-          lines.forEach((line, i) => {
-            ctx.fillText(line, centerX, qrY + qrSize + 24 + (i * 22))
-          })
-          ctx.fillText(data.reportUrl, centerX, qrY + qrSize + 24 + (lines.length * 22))
-          ctx.textAlign = "left" // Reset alignment
-
-          // Demo disclaimer
+          
+          if (data.locationMapUrl) {
+            // If we have a maps URL, show different text
+            ctx.fillText("Scan for Google Maps Location", centerX, qrY + qrSize + 24)
+            ctx.fillText("स्थान के लिए स्कैन करें", centerX, qrY + qrSize + 46)
+          } else {
+            // Default report QR text
+            const lines = t.translations.scanQrText.split("\n")
+            lines.forEach((line, i) => {
+              ctx.fillText(line, centerX, qrY + qrSize + 24 + (i * 22))
+            })
+            ctx.fillText(data.reportUrl, centerX, qrY + qrSize + 24 + (lines.length * 22))
+          }
+          ctx.textAlign = "left" // Reset alignment          // Demo disclaimer
           ctx.font = "500 11px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.fillText("Demo only — QR/URL not live", qrX, qrY + qrSize + 16)
         } catch {
@@ -289,6 +325,8 @@ export const CertificateCanvas = forwardRef<
         ctx.fillStyle = subText
         ctx.font = "500 13px system-ui, -apple-system, Segoe UI, Roboto"
         const footerY = height - 40
+        
+        // Credit and footer text
         if (data.footerCreditName) {
           ctx.font = "600 13px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.fillText(`Credit: ${data.footerCreditName}`, 40, footerY - 22)
@@ -298,7 +336,7 @@ export const CertificateCanvas = forwardRef<
 
         try {
           // Set quality to 1 and ensure background is preserved
-          onRendered?.(canvas.toDataURL("image/png", { quality: 1 }))
+          onRendered?.(canvas.toDataURL("image/png"))
         } catch {
           onRendered?.(null)
         }
