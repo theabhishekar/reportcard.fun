@@ -644,17 +644,37 @@ export default function HomePage() {
       </div>
 
       {/* Community Insights Preview */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-lg border">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-          📊 Community Insights
-        </h3>
+      <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-lg border relative overflow-hidden">
+        {/* New Feature Badge */}
+        <div className="absolute top-3 right-3 z-10">
+          <div className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+            ✨ NEW
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 text-center">
+            📊 Community Insights
+          </h3>
+          <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-md text-xs font-medium animate-bounce">
+            🎉 Just Launched!
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-400 p-3 mb-4 rounded-r-lg">
+          <p className="text-sm text-green-800 font-medium text-center">
+            🚀 <strong>Brand New Feature:</strong> Real-time analytics dashboard! 
+            See community trends, issue hotspots, and impact statistics.
+          </p>
+        </div>
+        
         <p className="text-sm text-gray-600 mb-4 text-center">
           Your civic reports contribute to community analytics and help identify problem areas
         </p>
         <div className="text-center">
           <a
             href="/admin"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-lg"
           >
             📈 View Analytics Dashboard
           </a>
