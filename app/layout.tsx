@@ -50,16 +50,10 @@ export default function RootLayout({
                 </a>
                 <a
                   href="/admin"
-                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium bg-blue-50 px-3 py-1 rounded-md"
                 >
-                  Admin
+                  📊 Analytics
                 </a>
-                                 <a
-                   href="/admin"
-                   className="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium bg-blue-50 px-3 py-1 rounded-md"
-                 >
-                   📊 Analytics
-                 </a>
                  <a
                    href="/terms"
                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
