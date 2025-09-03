@@ -515,6 +515,27 @@ export default function HomePage() {
         )}
       </div>
 
+      {/* Buy Me a Coffee Section */}
+      <div className="mx-auto max-w-xl px-4 py-8 text-center">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-6 border border-amber-200">
+          <h3 className="text-lg font-semibold text-amber-800 mb-3">
+            ☕ Support This Project
+          </h3>
+          <p className="text-sm text-amber-700 mb-4">
+            If this tool helps you report civic issues, consider buying me a coffee to keep it running!
+          </p>
+          <a
+            href="https://buymeacoffee.com/mehonestperson?status=1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200"
+          >
+            <span>☕</span>
+            <span>Buy Me a Coffee</span>
+          </a>
+        </div>
+      </div>
+
       {/* Footer */}
       <footer className="mt-12 py-6 border-t bg-gray-50">
         <div className="mx-auto max-w-xl px-4 text-center">
