@@ -92,8 +92,8 @@ export default function CivicHomePage() {
         <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-balance">Civic Issue Reporter</h1>
           <nav className="flex items-center gap-3">
-            <a className="text-sm text-blue-600 hover:underline" href="/admin">
-              Admin
+            <a className="text-sm text-blue-600 hover:underline" href="/analytics">
+              Analytics
             </a>
             <a className="text-sm text-blue-600 hover:underline" href="/">
               Home

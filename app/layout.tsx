@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/lib/language-context'
+import { LiveNewsMarquee } from '@/components/live-news-marquee'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -49,7 +50,7 @@ export default function RootLayout({
                   Generate
                 </a>
                 <a
-                  href="/admin"
+                  href="/analytics"
                   className="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium bg-blue-50 px-3 py-1 rounded-md"
                 >
                   📊 Analytics
@@ -77,6 +78,9 @@ export default function RootLayout({
             </div>
           </div>
         </div>
+
+        {/* Live News Marquee - Global */}
+        <LiveNewsMarquee />
         
         <LanguageProvider>
           {children}
