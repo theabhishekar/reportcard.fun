@@ -528,23 +528,55 @@ export default function HomePage() {
       </div>
 
       {/* Buy Me a Coffee Section */}
-      <div className="mx-auto max-w-xl px-4 py-8 text-center">
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-6 border border-amber-200">
-          <h3 className="text-lg font-semibold text-amber-800 mb-3">
+      <div className="mx-auto max-w-xl px-4 py-4 text-center">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 border border-amber-200">
+          <h3 className="text-base font-semibold text-amber-800 mb-2">
             ☕ Support This Project
           </h3>
-          <p className="text-sm text-amber-700 mb-4">
+          <p className="text-xs text-amber-700 mb-3">
             If this tool helps you report civic issues, consider buying me a coffee to keep it running!
           </p>
           <a
             href="https://buymeacoffee.com/mehonestperson?status=1"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200"
+            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
           >
             <span>☕</span>
             <span>Buy Me a Coffee</span>
           </a>
+        </div>
+      </div>
+
+      {/* GitHub Contribution Section */}
+      <div className="mx-auto max-w-xl px-4 py-4 text-center">
+        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h3 className="text-base font-semibold text-gray-800 mb-2">
+            🐛 Found an Issue? Want to Contribute?
+          </h3>
+          <p className="text-xs text-gray-600 mb-3">
+            This is an open-source project. If you encounter any bugs or have suggestions for improvements, we'd love your help!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+            <a
+              href="https://github.com/ScienceArtist/reportcard.fun/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
+            >
+              <span>📝</span>
+              <span>Report Issue</span>
+            </a>
+            <a
+              href="https://github.com/ScienceArtist/reportcard.fun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
+            >
+              <span>⭐</span>
+              <span>Star on GitHub</span>
+            </a>
+          </div>
         </div>
       </div>
 
