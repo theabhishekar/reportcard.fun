@@ -208,6 +208,26 @@ export class GitHubStorageService {
       return null
     }
   }
+
+  /**
+   * Get all GitHub issues directly
+   */
+  async getGitHubIssues(): Promise<any[]> {
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues?state=all&per_page=100`
+      )
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch issues: ${response.status}`)
+      }
+      
+      return await response.json()
+    } catch (error) {
+      console.error('Error fetching GitHub issues:', error)
+      return []
+    }
+  }
 }
 
 // Export singleton instance
