@@ -69,6 +69,20 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
+        
+        {/* Professional Government Appeal Banner */}
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 border-b border-green-200">
+          <div className="mx-auto max-w-7xl px-4 py-3">
+            <div className="text-center">
+              <p className="text-sm text-green-800 font-medium">
+                🇮🇳 <strong>Respectful Note to Hon'ble Officials:</strong> This is a simple spare time project by a citizen to help report civic issues constructively. 
+                Created with good intentions to support community improvement through proper RTI channels. 
+                <span className="text-green-900">🙏 Humbly seeking your understanding and guidance.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        
         <LanguageProvider>
           {children}
         </LanguageProvider>
