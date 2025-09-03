@@ -475,7 +475,7 @@ export default function HomePage() {
                 <span>Include PM Modi's Photo (Bottom Left)</span>
               </Label>
               <p className="text-xs text-gray-600">
-                PM Modi's photo will appear at the bottom left of the certificate (4x larger) if enabled.
+                PM Modi's photo will appear at the bottom left of the certificate if enabled.
                 Select additional leaders to appear at the top right.
               </p>
             </div>
