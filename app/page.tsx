@@ -65,7 +65,7 @@ export default function HomePage() {
   const [locText, setLocText] = useState<string>("")
   const [locationMapUrl, setLocationMapUrl] = useState<string>("")
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null })
-  const [dateTime, setDateTime] = useState<Date | null>(new Date()) // Initialize with current time
+  const [dateTime, setDateTime] = useState<Date | null>(null) // Initialize with null to prevent hydration mismatch
   const [localDateTime, setLocalDateTime] = useState<string>("")
   const [isLocLoading, setIsLocLoading] = useState(false)
   const [isClient, setIsClient] = useState(false) // Add client-side flag
@@ -109,6 +109,15 @@ export default function HomePage() {
       setLocalDateTime(currentTime.toLocaleString())
     }
   }, [dateTime, isClient])
+
+  // Initialize with a stable date to prevent hydration mismatch
+  useEffect(() => {
+    if (isClient && !dateTime) {
+      const now = new Date()
+      setDateTime(now)
+      setLocalDateTime(now.toLocaleString())
+    }
+  }, [isClient, dateTime])
 
   const canGenerate = useMemo(() => {
     return Boolean(issueImage && leaderPreview)
@@ -273,11 +282,12 @@ export default function HomePage() {
 
             <div className="grid gap-2">
               <Label>Capture Time</Label>
-              {isClient ? (
+              {isClient && dateTime ? (
                 <div className="space-y-2">
                   <Input
+                    key="datetime-input"
                     type="datetime-local"
-                    value={localDateTime ? new Date(localDateTime).toISOString().slice(0, 16) : ""}
+                    value={dateTime.toISOString().slice(0, 16)}
                     onChange={(e) => {
                       if (e.target.value) {
                         const newDateTime = new Date(e.target.value)
@@ -288,11 +298,13 @@ export default function HomePage() {
                     className="text-sm"
                   />
                   <div className="text-xs text-gray-600">
-                    Current time: {localDateTime}
+                    Current time: <span suppressHydrationWarning>{localDateTime}</span>
                   </div>
                 </div>
               ) : (
-                <div className="text-sm text-gray-400">Loading...</div>
+                <div className="text-sm text-gray-400">
+                  {isClient ? "Loading time..." : "Loading..."}
+                </div>
               )}
             </div>
 
