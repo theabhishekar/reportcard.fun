@@ -16,6 +16,7 @@ import { getLocationFromImageOrDevice } from "@/lib/location"
 import { CertificateCanvas } from "@/components/certificate-canvas"
 import { saveReport } from "@/lib/storage"
 import { SocialShare } from "@/components/social-share"
+import { EmailRTIOptions } from "@/components/email-rti-options"
 
 type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Other"
 
@@ -351,6 +352,14 @@ export default function HomePage() {
                   </a>{" "}
                   — demo only, no backend yet.
                 </p>
+              )}
+              
+              {/* Email and RTI Options */}
+              {certData && (
+                <EmailRTIOptions 
+                  issueType={certData.issueType}
+                  location={certData.locationText}
+                />
               )}
             </section>
           </>
