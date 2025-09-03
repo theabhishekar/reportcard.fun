@@ -125,6 +125,16 @@ export default function HomePage() {
 
   const handleGenerate = async () => {
     if (!issueImage) return;
+    
+    // Debug logging for issue image
+    console.log('Generating certificate with issue image:', {
+      name: issueImage.name,
+      size: issueImage.size,
+      type: issueImage.type,
+      lastModified: issueImage.lastModified,
+      exists: !!issueImage
+    });
+    
     const id = generateUUID();
     const url = `/report/${id}` // Just the path, domain handled in SocialShare;
 

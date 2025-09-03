@@ -206,30 +206,93 @@ export const CertificateCanvas = forwardRef<
         const photoW = width - 80
         ctx.strokeStyle = border
         ctx.lineWidth = 2
-        try {
-          const issueUrl = URL.createObjectURL(data.issueImageFile)
-          revoked = issueUrl
-          const issueImg = await loadImage(issueUrl)
-          const aspect = issueImg.width / issueImg.height
-          const photoH = Math.min(420, Math.round(photoW / Math.max(aspect, 1e-6)))
-          ctx.strokeRect(photoX - 1, photoY - 1, photoW + 2, photoH + 2)
-          ctx.drawImage(issueImg, photoX, photoY, photoW, photoH)
+        
+        // Enhanced issue photo loading with better error handling
+        let issuePhotoLoaded = false
+        let photoH = 300 // Default height for fallback
+        
+        if (data.issueImageFile && data.issueImageFile instanceof File && data.issueImageFile.size > 0) {
+          try {
+            console.log('Loading issue image:', {
+              name: data.issueImageFile.name,
+              size: data.issueImageFile.size,
+              type: data.issueImageFile.type
+            })
+            
+            const issueUrl = URL.createObjectURL(data.issueImageFile)
+            revoked = issueUrl
+            
+            // Add timeout for image loading
+            const imageLoadPromise = loadImage(issueUrl)
+            const timeoutPromise = new Promise<never>((_, reject) => 
+              setTimeout(() => reject(new Error('Image loading timeout')), 10000)
+            )
+            
+            const issueImg = await Promise.race([imageLoadPromise, timeoutPromise])
+            
+            if (issueImg && 'width' in issueImg && 'height' in issueImg && 
+                typeof issueImg.width === 'number' && typeof issueImg.height === 'number' &&
+                issueImg.width > 0 && issueImg.height > 0) {
+              const aspect = issueImg.width / issueImg.height
+              photoH = Math.min(420, Math.round(photoW / Math.max(aspect, 1e-6)))
+              
+              ctx.strokeRect(photoX - 1, photoY - 1, photoW + 2, photoH + 2)
+              ctx.drawImage(issueImg as CanvasImageSource, photoX, photoY, photoW, photoH)
+              issuePhotoLoaded = true
+              
+              console.log('Issue image loaded successfully:', {
+                width: issueImg.width,
+                height: issueImg.height,
+                aspect: aspect,
+                photoH: photoH
+              })
+            } else {
+              throw new Error('Invalid image dimensions')
+            }
 
-          // Divider
-          ctx.strokeStyle = border
-          ctx.lineWidth = 1
-          ctx.beginPath()
-          ctx.moveTo(40, photoY + photoH + 20)
-          ctx.lineTo(width - 40, photoY + photoH + 20)
-          ctx.stroke()
-        } catch {
-          const photoH = 300
+            // Divider
+            ctx.strokeStyle = border
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(40, photoY + photoH + 20)
+            ctx.lineTo(width - 40, photoY + photoH + 20)
+            ctx.stroke()
+          } catch (error) {
+            console.error('Failed to load issue image:', error)
+            console.error('Image file details:', {
+              name: data.issueImageFile?.name,
+              size: data.issueImageFile?.size,
+              type: data.issueImageFile?.type,
+              lastModified: data.issueImageFile?.lastModified
+            })
+            
+            // Fallback to placeholder
+            ctx.strokeRect(photoX - 1, photoY - 1, photoW + 2, photoH + 2)
+            ctx.fillStyle = "#F3F4F6"
+            ctx.fillRect(photoX, photoY, photoW, photoH)
+            ctx.fillStyle = subText
+            ctx.font = "600 16px system-ui, -apple-system, Segoe UI, Roboto"
+            ctx.fillText("Issue photo unavailable", photoX + 20, photoY + 40)
+            ctx.fillText("Error: " + (error instanceof Error ? error.message : 'Unknown error'), photoX + 20, photoY + 70)
+
+            // Divider
+            ctx.strokeStyle = border
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(40, photoY + photoH + 20)
+            ctx.lineTo(width - 40, photoY + photoH + 20)
+            ctx.stroke()
+          }
+        } else {
+          // No valid image file provided
+          console.warn('No valid issue image file provided:', data.issueImageFile)
           ctx.strokeRect(photoX - 1, photoY - 1, photoW + 2, photoH + 2)
           ctx.fillStyle = "#F3F4F6"
           ctx.fillRect(photoX, photoY, photoW, photoH)
           ctx.fillStyle = subText
           ctx.font = "600 16px system-ui, -apple-system, Segoe UI, Roboto"
-          ctx.fillText("Issue photo unavailable", photoX + 20, photoY + 40)
+          ctx.fillText("No issue photo provided", photoX + 20, photoY + 40)
+          ctx.fillText("Please upload a photo to continue", photoX + 20, photoY + 70)
 
           // Divider
           ctx.strokeStyle = border
