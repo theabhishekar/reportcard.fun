@@ -673,8 +673,7 @@ export default function HomePage() {
           </p>
           <p>
             <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a> • 
-            Platform operated under IT Act 2000, Section 79 • 
-            Report issues: legal@reportcard.fun
+            Platform operated under IT Act 2000, Section 79
           </p>
         </div>
         <p>
