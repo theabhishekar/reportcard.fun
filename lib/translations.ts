@@ -39,7 +39,7 @@ export const languages: Language[] = [
     name: 'English + Hindi',
     nativeName: 'English + हिंदी',
     translations: {
-      title: 'Civic Issue Certificate',
+      title: 'reportcard.fun (Civic Issue Reporter)',
       subtitle: 'नागरिक समस्या प्रमाणपत्र',
       dateTimeLabel: 'Date & Time / दिनांक',
       locationLabel: 'Location / स्थान',
