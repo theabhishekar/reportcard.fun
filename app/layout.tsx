@@ -31,7 +31,8 @@ export default function RootLayout({
                   href="/"
                   className="text-lg font-semibold text-gray-900 hover:text-gray-700 transition-colors"
                 >
-                  Civic Issue Reporter
+                  reportcard.fun
+                  <span className="text-sm font-normal text-gray-600 ml-2">(Civic Issue Reporter)</span>
                 </a>
               </div>
               <div className="flex items-center gap-4">
