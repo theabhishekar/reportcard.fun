@@ -320,11 +320,16 @@ export default function HomePage() {
               <div className="grid grid-cols-1 gap-2">
                 <label className="flex items-center gap-2">
                   <input
-                    type="radio"
-                    name="mainLeader"
+                    type="checkbox"
                     className="h-4 w-4 rounded border-gray-300"
                     checked={includeModiPhoto}
-                    onChange={() => setIncludeModiPhoto(true)}
+                    onChange={(e) => {
+                      setIncludeModiPhoto(e.target.checked);
+                      if (e.target.checked) {
+                        // Uncheck Gadkari if Modi is selected
+                        setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
+                      }
+                    }}
                   />
                   <span className="text-sm">Hon' PM Narendra Modi</span>
                   <div className="flex flex-col items-center ml-2">
@@ -337,13 +342,16 @@ export default function HomePage() {
                 </label>
                 <label className="flex items-center gap-2">
                   <input
-                    type="radio"
-                    name="mainLeader"
+                    type="checkbox"
                     className="h-4 w-4 rounded border-gray-300"
-                    checked={!includeModiPhoto && selectedLeaders.includes("gadkari")}
-                    onChange={() => {
-                      setIncludeModiPhoto(false);
-                      setSelectedLeaders(prev => [...prev.filter(k => k !== "gadkari"), "gadkari"]);
+                    checked={selectedLeaders.includes("gadkari")}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedLeaders(prev => [...prev, "gadkari"]);
+                        setIncludeModiPhoto(false); // Uncheck Modi if Gadkari is selected
+                      } else {
+                        setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
+                      }
                     }}
                   />
                   <span className="text-sm">Hon' Nitin Gadkari</span>
@@ -351,26 +359,6 @@ export default function HomePage() {
                     <img 
                       src="/images/nitin-gadkari.jpg" 
                       alt="Nitin Gadkari"
-                      className="h-8 w-8 rounded-full object-cover border"
-                    />
-                  </div>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="mainLeader"
-                    className="h-4 w-4 rounded border-gray-300"
-                    checked={!includeModiPhoto && !selectedLeaders.includes("gadkari")}
-                    onChange={() => {
-                      setIncludeModiPhoto(false);
-                      setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
-                    }}
-                  />
-                  <span className="text-sm">No Main Leader Photo</span>
-                  <div className="flex flex-col items-center ml-2">
-                    <img 
-                      src="/images/leader-default.png" 
-                      alt="No leader"
                       className="h-8 w-8 rounded-full object-cover border"
                     />
                   </div>
