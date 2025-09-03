@@ -514,6 +514,23 @@ export default function HomePage() {
           </>
         )}
       </div>
+
+      {/* Footer */}
+      <footer className="mt-12 py-6 border-t bg-gray-50">
+        <div className="mx-auto max-w-xl px-4 text-center">
+          <p className="text-sm text-gray-600">
+            Made with ❤️ by{" "}
+            <a 
+              href="https://twitter.com/Mehonestperson" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+            >
+              @Mehonestperson
+            </a>
+          </p>
+        </div>
+      </footer>
     </main>
   )
 }
