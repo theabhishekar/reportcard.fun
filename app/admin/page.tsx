@@ -1,107 +1,83 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { listReports, deleteReport } from "@/lib/storage"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { AnalyticsDashboard } from "@/components/analytics-dashboard"
 
 export default function AdminPage() {
-  const [q, setQ] = useState("")
-  const [type, setType] = useState("All")
-  const [force, setForce] = useState(0)
-
-  const items = useMemo(() => {
-    const all = listReports()
-    const t = type === "All" ? all : all.filter((r) => r.issueType === type)
-    const f = !q
-      ? t
-      : t.filter(
-          (r) =>
-            (r.locationText?.toLowerCase() ?? "").includes(q.toLowerCase()) ||
-            (r.note?.toLowerCase() ?? "").includes(q.toLowerCase()),
-        )
-    return f
-  }, [q, type, force])
-
   return (
-    <main className="min-h-dvh bg-white">
-      <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
-        <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-semibold">Admin</h1>
-          <nav className="flex items-center gap-3">
-            <a className="text-sm text-blue-600 hover:underline" href="/civic">
-              Generate
-            </a>
-            <a className="text-sm text-blue-600 hover:underline" href="/">
-              Home
-            </a>
-          </nav>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-3xl px-4 py-4 space-y-4">
-        <div className="grid gap-3 md:grid-cols-3">
-          <div className="grid gap-2">
-            <Label>Search</Label>
-            <Input placeholder="Search by location or note" value={q} onChange={(e) => setQ(e.target.value)} />
-          </div>
-          <div className="grid gap-2">
-            <Label>Issue Type</Label>
-            <select className="border rounded px-3 py-2 text-sm" value={type} onChange={(e) => setType(e.target.value)}>
-              <option>All</option>
-              <option>Pothole</option>
-              <option>Garbage</option>
-              <option>Broken Streetlight</option>
-              <option>Illegal Dumping</option>
-              <option>Waterlogging</option>
-              <option>Other</option>
-            </select>
-          </div>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="mt-2 text-gray-600">
+            Manage civic issues and view community analytics
+          </p>
         </div>
 
-        <ul className="grid gap-4">
-          {items.map((r) => (
-            <li key={r.id} className="rounded border p-3 flex items-start gap-3">
-              {r.imageDataUrl ? (
-                <img
-                  src={r.imageDataUrl || "/placeholder.svg?height=96&width=96&query=thumbnail"}
-                  alt="Certificate thumbnail"
-                  className="w-24 h-24 object-cover rounded border"
-                />
-              ) : (
-                <div className="w-24 h-24 grid place-items-center bg-gray-100 rounded border text-xs text-gray-600">
-                  No image
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <a className="text-blue-600 underline text-sm" href={`/report/${r.id}`}>
-                    View
-                  </a>
-                  <span className="text-xs text-gray-500">ID: {r.id}</span>
-                </div>
-                <div className="text-sm font-medium mt-1">{r.issueType}</div>
-                <div className="text-xs text-gray-600">{new Date(r.capturedAt).toLocaleString()}</div>
-                <div className="text-xs text-gray-700 truncate">Location: {r.locationText}</div>
-                {r.note && <div className="text-xs text-gray-700 truncate">Note: {r.note}</div>}
-              </div>
-              <div className="flex flex-col gap-2">
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    deleteReport(r.id)
-                    setForce((x) => x + 1)
-                  }}
-                >
-                  Delete
-                </Button>
-              </div>
-            </li>
-          ))}
-          {items.length === 0 && <li className="text-sm text-gray-600">No certificates stored yet.</li>}
-        </ul>
+        {/* Analytics Dashboard */}
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            📊 Community Analytics Dashboard
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Real-time insights from community civic issue reports
+          </p>
+          <AnalyticsDashboard />
+        </div>
+
+        {/* Admin Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              🚨 Civic Issues Management
+            </h3>
+            <p className="text-gray-600 mb-4">
+              View and manage all reported civic issues
+            </p>
+            <a
+              href="https://github.com/ScienceArtist/civic-issues-database/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              View All Issues
+            </a>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              📈 Analytics Repository
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Access detailed analytics and reports
+            </p>
+            <a
+              href="https://github.com/ScienceArtist/civic-issues-database/tree/main/analytics"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              View Analytics
+            </a>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              ⚙️ System Status
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Monitor GitHub Actions and automation
+            </p>
+            <a
+              href="https://github.com/ScienceArtist/civic-issues-database/actions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+            >
+              Check Status
+            </a>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   )
 }

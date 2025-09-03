@@ -73,19 +73,29 @@ export class GitHubStorageService {
 
   /**
    * Store a civic report as a GitHub issue
-   * Note: This requires GitHub authentication in a real implementation
+   * Uses secure server-side API route to avoid exposing tokens
    */
   async storeReport(report: CivicReport): Promise<{ success: boolean; issueNumber?: number; error?: string }> {
     try {
-      const issueData = this.reportToIssue(report)
-      
-      // In a real implementation, you'd use GitHub's API with authentication
-      // For now, we'll return the formatted data that can be manually created
-      console.log('Report formatted for GitHub Issues:', issueData)
+      // Use secure server-side API route
+      const response = await fetch('/api/github', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ report })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to store report')
+      }
+
+      const result = await response.json()
       
       return {
-        success: true,
-        issueNumber: Math.floor(Math.random() * 10000), // Placeholder
+        success: result.success,
+        issueNumber: result.issueNumber,
         error: undefined
       }
     } catch (error) {

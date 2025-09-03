@@ -51,7 +51,7 @@ export function AnalyticsDashboard() {
     return (
       <div className="text-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-2 text-gray-600">Loading analytics...</p>
+        <p className="mt-2 text-gray-600">Loading community analytics...</p>
       </div>
     )
   }
@@ -73,16 +73,6 @@ export function AnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900">Civic Issues Analytics</h2>
-        <p className="text-gray-600 mt-2">
-          Real-time insights from community reports
-        </p>
-        <p className="text-xs text-gray-500 mt-1">
-          Last updated: {new Date(analytics.generatedAt).toLocaleString('en-IN')}
-        </p>
-      </div>
-
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
@@ -126,92 +116,98 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* Top Issue Types */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Most Common Issues</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {analytics.topIssueTypes.map(([type, count], index) => (
-              <div key={type} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-900">
-                    {index + 1}.
-                  </span>
-                  <span className="text-sm text-gray-700 capitalize">
-                    {type.replace(/-/g, ' ')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{
-                        width: `${(count / analytics.totalReports) * 100}%`
-                      }}
-                    ></div>
+      {analytics.topIssueTypes.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Most Common Issues</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analytics.topIssueTypes.map(([type, count], index) => (
+                <div key={type} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-900">
+                      {index + 1}.
+                    </span>
+                    <span className="text-sm text-gray-700 capitalize">
+                      {type.replace(/-/g, ' ')}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900 min-w-[3rem] text-right">
-                    {count}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{
+                          width: `${(count / analytics.totalReports) * 100}%`
+                        }}
+                      ></div>
+                    </div>
+                    <span className="text-sm font-medium text-gray-900 min-w-[3rem] text-right">
+                      {count}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Top Locations */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Most Active Locations</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {analytics.topLocations.slice(0, 10).map(([location, count], index) => (
-              <div key={location} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+      {analytics.topLocations.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Most Active Locations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analytics.topLocations.slice(0, 10).map(([location, count], index) => (
+                <div key={location} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-900">
+                      {index + 1}.
+                    </span>
+                    <span className="text-sm text-gray-700">
+                      {location}
+                    </span>
+                  </div>
                   <span className="text-sm font-medium text-gray-900">
-                    {index + 1}.
-                  </span>
-                  <span className="text-sm text-gray-700">
-                    {location}
+                    {count} reports
                   </span>
                 </div>
-                <span className="text-sm font-medium text-gray-900">
-                  {count} reports
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Top Users */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Most Active Citizens</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {analytics.topUsers.slice(0, 10).map(([user, count], index) => (
-              <div key={user} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+      {analytics.topUsers.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Most Active Citizens</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analytics.topUsers.slice(0, 10).map(([user, count], index) => (
+                <div key={user} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-900">
+                      {index + 1}.
+                    </span>
+                    <span className="text-sm text-gray-700">
+                      {user === 'anonymous' ? 'Anonymous User' : user}
+                    </span>
+                  </div>
                   <span className="text-sm font-medium text-gray-900">
-                    {index + 1}.
-                  </span>
-                  <span className="text-sm text-gray-700">
-                    {user === 'anonymous' ? 'Anonymous User' : user}
+                    {count} reports
                   </span>
                 </div>
-                <span className="text-sm font-medium text-gray-900">
-                  {count} reports
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Data Source Info */}
       <div className="text-center text-xs text-gray-500 bg-gray-50 p-4 rounded-lg">

@@ -25,6 +25,8 @@ import { CertificateCanvas } from "@/components/certificate-canvas"
 import { saveReport } from "@/lib/storage"
 import { SocialShare } from "@/components/social-share"
 import { EmailRTIOptions } from "@/components/email-rti-options"
+import { AnalyticsDashboard } from "@/components/analytics-dashboard"
+import { githubStorage } from "@/lib/github-storage"
 
 // Utility function to generate UUID that works in all browsers
 function generateUUID(): string {
@@ -176,6 +178,36 @@ export default function HomePage() {
     };
     setCertData(data);
     setReportUrl(url);
+
+    // Store report in GitHub Issues database
+    try {
+      const report = {
+        id: id,
+        issueType: issueType,
+        note: issueNote,
+        locationText:
+          (locText && locText.trim()) ||
+          (coords.lat && coords.lng ? `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}` : "Not provided"),
+        coords: coords.lat && coords.lng ? { lat: coords.lat, lng: coords.lng } : undefined,
+        capturedAt: (dateTime ?? new Date()).toISOString(),
+        issueImageUrl: issueImage ? URL.createObjectURL(issueImage) : undefined,
+        certificateUrl: url,
+        userId: 'anonymous',
+        reportUrl: url,
+        locationMapUrl: locationMapUrl || undefined,
+        footerCreditName: creditName || "Made with ❤️ by @Mehonestperson"
+      }
+
+      const result = await githubStorage.storeReport(report)
+      if (result.success) {
+        console.log('Report stored successfully:', result)
+      } else {
+        console.error('Failed to store report:', result.error)
+      }
+    } catch (error) {
+      console.error('Error storing report:', error)
+      // Don't fail the certificate generation if storage fails
+    }
   }
 
   // Capture the canvas image once drawn
@@ -202,6 +234,26 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      {/* Legal Disclaimer */}
+      <div className="mx-auto max-w-xl px-4 pt-4">
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-800">
+                <strong>Important:</strong> This platform is for reporting civic infrastructure issues only (potholes, garbage, streetlights, etc.). 
+                Do not make personal accusations or unsubstantiated claims. 
+                <a href="/terms" className="underline hover:text-yellow-900">Read full terms</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="mx-auto max-w-xl px-4 py-4 space-y-6">
         <Card>
@@ -567,52 +619,75 @@ export default function HomePage() {
       </div>
 
       {/* GitHub Contribution Section */}
-      <div className="mx-auto max-w-xl px-4 py-4 text-center">
-        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-          <h3 className="text-base font-semibold text-gray-800 mb-2">
-            🐛 Found an Issue? Want to Contribute?
-          </h3>
-          <p className="text-xs text-gray-600 mb-3">
-            This is an open-source project. If you encounter any bugs or have suggestions for improvements, we'd love your help!
+      <div className="mt-8 p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          🤝 Contribute to the Project
+        </h3>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="https://github.com/ScienceArtist/reportcard.fun/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+          >
+            🐛 Report Issue
+          </a>
+          <a
+            href="https://github.com/ScienceArtist/reportcard.fun"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          >
+            ⭐ Star on GitHub
+          </a>
+        </div>
+      </div>
+
+      {/* Community Insights Preview */}
+      <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-lg border">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          📊 Community Insights
+        </h3>
+        <p className="text-sm text-gray-600 mb-4 text-center">
+          Your civic reports contribute to community analytics and help identify problem areas
+        </p>
+        <div className="text-center">
+          <a
+            href="/admin"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            📈 View Analytics Dashboard
+          </a>
+          <p className="text-xs text-gray-500 mt-2">
+            Access detailed community insights and civic issue statistics
           </p>
-          <div className="flex flex-col sm:flex-row gap-2 justify-center">
-            <a
-              href="https://github.com/ScienceArtist/reportcard.fun/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
-            >
-              <span>📝</span>
-              <span>Report Issue</span>
-            </a>
-            <a
-              href="https://github.com/ScienceArtist/reportcard.fun"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
-            >
-              <span>⭐</span>
-              <span>Star on GitHub</span>
-            </a>
-          </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="mt-12 py-6 border-t bg-gray-50">
-        <div className="mx-auto max-w-xl px-4 text-center">
-          <p className="text-sm text-gray-600">
-            Made with ❤️ by{" "}
-            <a 
-              href="https://twitter.com/Mehonestperson" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-            >
-              @Mehonestperson
-            </a>
+      <footer className="mt-12 py-6 text-center text-gray-600 border-t">
+        <div className="mb-4 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+          <p className="mb-2">
+            <strong>Legal Notice:</strong> This platform is for civic infrastructure reporting only. 
+            Users are responsible for their content. We do not verify reports or endorse claims.
+          </p>
+          <p>
+            <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a> • 
+            Platform operated under IT Act 2000, Section 79 • 
+            Report issues: legal@reportcard.fun
           </p>
         </div>
+        <p>
+          Made with ❤️ by{" "}
+          <a
+            href="https://twitter.com/Mehonestperson"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            @Mehonestperson
+          </a>
+        </p>
       </footer>
     </main>
   )
