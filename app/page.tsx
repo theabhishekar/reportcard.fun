@@ -41,6 +41,19 @@ function generateUUID(): string {
 
 type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Other"
 
+type LeaderOption = {
+  key: string
+  label: string
+  imageUrl: string
+}
+
+const LEADER_OPTIONS: LeaderOption[] = [
+  { key: "modi", label: "Hon' PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
+  { key: "gadkari", label: "Hon' Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
+  { key: "cm", label: "Hon' State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
+  { key: "custom", label: "Add Custom Leader/Officer", imageUrl: "/images/leader-default.png" },
+]
+
 export default function HomePage() {
   const [issueImage, setIssueImage] = useState<File | null>(null)
   const [issuePreview, setIssuePreview] = useState<string | null>(null)
@@ -108,17 +121,18 @@ export default function HomePage() {
 
     // Build top leaders array
     const topLeaders = selectedLeaders
+      .filter((key) => key !== "modi") // exclude Modi from top, always at bottom
       .map((key) => {
-        if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
-        if (key === "custom") return { url: customImage, name: customName || "Hon' Selected Leader" };
-        if (key === "gadkari") return { url: "/images/nitin-gadkari.jpg", name: "Hon' Nitin Gadkari" };
-        return null;
+  if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
+  if (key === "custom") return { url: customImage, name: customName || "Hon' Selected Leader" };
+        const found = LEADER_OPTIONS.find((opt) => opt.key === key);
+        return found ? { url: found.imageUrl, name: found.label } : null;
       })
       .filter((leader): leader is { url: string; name: string } => Boolean(leader));
 
-    // Include Modi at bottom left if selected
+    // Conditionally include Modi at bottom left
     const modiImage = includeModiPhoto 
-      ? "/images/pm-modi.png"
+      ? (LEADER_OPTIONS.find((opt) => opt.key === "modi")?.imageUrl || "/images/pm-modi.png")
       : "/images/leader-default.png"; // Use placeholder if Modi photo is disabled
 
     const data = {
@@ -300,105 +314,42 @@ export default function HomePage() {
             <CardTitle className="text-base">3) {t.translations.chooseLeaders}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Main Leader Selection */}
             <div className="space-y-3">
-              <Label>Select Main Leader (Bottom Left)</Label>
+              <Label>Select Leaders (Top Right)</Label>
               <div className="grid grid-cols-1 gap-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300"
-                    checked={includeModiPhoto}
-                    onChange={(e) => setIncludeModiPhoto(e.target.checked)}
-                  />
-                  <span className="text-sm">Hon' PM Narendra Modi</span>
-                  <div className="flex flex-col items-center ml-2">
-                    <img 
-                      src="/images/pm-modi.png" 
-                      alt="PM Modi"
-                      className="h-8 w-8 rounded-full object-cover border"
+                {LEADER_OPTIONS.map((opt) => (
+                  <label key={opt.key} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300"
+                      checked={selectedLeaders.includes(opt.key)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedLeaders((prev) => [...prev, opt.key]);
+                        } else if (opt.key !== "modi") { // Don't unselect Modi
+                          setSelectedLeaders((prev) => prev.filter((k) => k !== opt.key));
+                        }
+                      }}
                     />
-                  </div>
-                </label>
+                    <span className="text-sm">{opt.label}</span>
+                    <div className="flex flex-col items-center ml-2">
+                      <img 
+                        src={opt.imageUrl} 
+                        alt={opt.label}
+                        className="h-8 w-8 rounded-full object-cover border"
+                      />
+                      {opt.key === "gadkari" && (
+                        <span className="text-xs text-red-600 font-medium">Nitin Gadkari</span>
+                      )}
+                    </div>
+                  </label>
+                ))}
               </div>
             </div>
 
-            {/* Additional Leaders Selection */}
-            <div className="space-y-3">
-              <Label>Select Additional Leaders (Top Right)</Label>
-              <div className="grid grid-cols-1 gap-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300"
-                    checked={selectedLeaders.includes("gadkari")}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedLeaders(prev => [...prev, "gadkari"]);
-                      } else {
-                        setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
-                      }
-                    }}
-                  />
-                  <span className="text-sm">Hon' Nitin Gadkari</span>
-                  <div className="flex flex-col items-center ml-2">
-                    <img 
-                      src="/images/nitin-gadkari.jpg" 
-                      alt="Nitin Gadkari"
-                      className="h-8 w-8 rounded-full object-cover border"
-                    />
-                  </div>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300"
-                    checked={selectedLeaders.includes("cm")}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedLeaders(prev => [...prev, "cm"]);
-                      } else {
-                        setSelectedLeaders(prev => prev.filter(k => k !== "cm"));
-                      }
-                    }}
-                  />
-                  <span className="text-sm">Hon' State/UT CM</span>
-                  <div className="flex flex-col items-center ml-2">
-                    <img 
-                      src="/images/leader-default.png" 
-                      alt="State/UT CM"
-                      className="h-8 w-8 rounded-full object-cover border"
-                    />
-                  </div>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300"
-                    checked={selectedLeaders.includes("custom")}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedLeaders(prev => [...prev, "custom"]);
-                      } else {
-                        setSelectedLeaders(prev => prev.filter(k => k !== "custom"));
-                      }
-                    }}
-                  />
-                  <span className="text-sm">Add Custom Leader/Officer</span>
-                  <div className="flex flex-col items-center ml-2">
-                    <img 
-                      src="/images/leader-default.png" 
-                      alt="Custom Leader"
-                      className="h-8 w-8 rounded-full object-cover border"
-                    />
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            {selectedLeaders.includes("cm") && (
+              {selectedLeaders.includes("cm") && (
               <div className="space-y-2">
-                <Label className="text-sm">Upload State/UT CM Photo</Label>
+                <Label className="text-sm">Select State/UT CM Photo</Label>
                 <LeaderPhotoInput
                   defaultUrl="/images/leader-default.png"
                   onChange={(_: File | null, preview: string | null, name?: string) => {
@@ -406,7 +357,7 @@ export default function HomePage() {
                     if (name) setSelectedCMName(name);
                   }}
                 />
-                {cmImage && cmImage !== "/images/leader-default.png" && (
+                {cmImage && (
                   <div className="space-y-1">
                     <img
                       src={cmImage}
@@ -419,7 +370,22 @@ export default function HomePage() {
               </div>
             )}
             
-
+            {/* Modi Photo Control */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300"
+                  checked={includeModiPhoto}
+                  onChange={(e) => setIncludeModiPhoto(e.target.checked)}
+                />
+                <span>Include PM Modi's Photo (Bottom Left)</span>
+              </Label>
+              <p className="text-xs text-gray-600">
+                PM Modi's photo will appear at the bottom left of the certificate (4x larger) if enabled.
+                Select additional leaders to appear at the top right.
+              </p>
+            </div>
 
             {/* Legal Disclaimer */}
             <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
