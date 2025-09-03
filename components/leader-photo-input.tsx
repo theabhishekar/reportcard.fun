@@ -19,17 +19,13 @@ export function LeaderPhotoInput({
   defaultUrl: string
   onChange: (file: File | null, previewUrl: string | null, name?: string) => void
 }) {
-  // three choices: 'pm' | 'gadkari' | 'custom' | 'url' | 'statecm'
-  const [choice, setChoice] = useState<"pm" | "gadkari" | "custom" | "url" | "statecm">("pm")
+  // three choices: 'custom' | 'url' | 'statecm'
+  const [choice, setChoice] = useState<"custom" | "url" | "statecm">("statecm")
   const [url, setUrl] = useState<string>("")
 
   // reflect current choice into preview (statecm is handled by the picker)
   useEffect(() => {
-    if (choice === "pm") {
-      onChange(null, "/images/pm-modi.png", "Hon' PM Narendra Modi")
-    } else if (choice === "gadkari") {
-      onChange(null, "/images/nitin-gadkari.jpg", "Hon' Nitin Gadkari")
-    } else if (choice === "url") {
+    if (choice === "url") {
       onChange(null, url || defaultUrl)
     } else if (choice === "custom") {
       // Do nothing here; handled by file input.
@@ -59,30 +55,6 @@ export function LeaderPhotoInput({
       <Label className="text-sm">Leader Photo</Label>
 
       <div className="flex flex-col gap-2 text-sm">
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="radio"
-            name="leader-choice"
-            value="pm"
-            checked={choice === "pm"}
-            onChange={() => setChoice("pm")}
-          />
-          <span>Hon' PM Narendra Modi</span>
-          <img src="/images/pm-modi.png" alt="PM Modi" className="h-8 w-8 rounded-full object-cover" />
-        </label>
-
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="radio"
-            name="leader-choice"
-            value="gadkari"
-            checked={choice === "gadkari"}
-            onChange={() => setChoice("gadkari")}
-          />
-          <span>Hon' Nitin Gadkari</span>
-          <img src="/images/nitin-gadkari.jpg" alt="Nitin Gadkari" className="h-8 w-8 rounded-full object-cover" />
-        </label>
-
         <label className="inline-flex items-center gap-2">
           <input
             type="radio"
