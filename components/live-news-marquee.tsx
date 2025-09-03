@@ -70,33 +70,33 @@ export function LiveNewsMarquee() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-red-50 to-orange-50 border-b border-red-200">
+    <div className="bg-blue-600 border-b border-blue-700">
       <div className="overflow-hidden whitespace-nowrap">
         <div className="animate-marquee inline-block">
-          <div className="flex items-center gap-8 px-4 py-2 text-sm">
-            <span className="font-bold text-red-700">🚨 BREAKING:</span>
-            <span className="text-red-600">Top Issue Types:</span>
+          <div className="flex items-center gap-8 px-4 py-3 text-sm">
+            <span className="font-bold text-white bg-red-600 px-2 py-1 rounded text-xs">🚨 BREAKING NEWS</span>
+            <span className="text-blue-100 font-medium">Community Alert:</span>
             {topIssueTypes.map(([type, count], index) => (
-              <span key={index} className="text-red-800">
-                {type} ({count})
+              <span key={index} className="text-white">
+                <span className="font-semibold">{type}</span> crisis reported <span className="font-bold text-yellow-300">{count} times</span>
               </span>
             ))}
-            <span className="text-red-600">| Top Locations:</span>
+            <span className="text-blue-100 font-medium">| Hotspots:</span>
             {topLocations.map(([location, count], index) => (
-              <span key={index} className="text-red-800">
-                {location} ({count})
+              <span key={index} className="text-white">
+                <span className="font-semibold">{location}</span> needs attention <span className="font-bold text-yellow-300">({count} reports)</span>
               </span>
             ))}
-            <span className="text-red-600">| Top Issue Types:</span>
+            <span className="text-blue-100 font-medium">| Citizens Demand Action:</span>
             {topIssueTypes.map(([type, count], index) => (
-              <span key={index} className="text-red-800">
-                {type} ({count})
+              <span key={index} className="text-white">
+                <span className="font-semibold">{type}</span> crisis reported <span className="font-bold text-yellow-300">{count} times</span>
               </span>
             ))}
-            <span className="text-red-600">| Top Locations:</span>
+            <span className="text-blue-100 font-medium">| Critical Areas:</span>
             {topLocations.map(([location, count], index) => (
-              <span key={index} className="text-red-800">
-                {location} ({count})
+              <span key={index} className="text-white">
+                <span className="font-semibold">{location}</span> needs attention <span className="font-bold text-yellow-300">({count} reports)</span>
               </span>
             ))}
           </div>
