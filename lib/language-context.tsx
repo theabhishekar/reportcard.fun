@@ -1,3 +1,11 @@
+/**
+ * Language Context Provider
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { createContext, useContext, useState, ReactNode } from 'react'

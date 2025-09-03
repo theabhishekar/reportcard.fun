@@ -1,3 +1,11 @@
+/**
+ * Tweet Button Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"

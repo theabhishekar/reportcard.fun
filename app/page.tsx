@@ -1,3 +1,11 @@
+/**
+ * Main Page Component - Civic Issue Reporting App
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
@@ -17,6 +25,19 @@ import { CertificateCanvas } from "@/components/certificate-canvas"
 import { saveReport } from "@/lib/storage"
 import { SocialShare } from "@/components/social-share"
 import { EmailRTIOptions } from "@/components/email-rti-options"
+
+// Utility function to generate UUID that works in all browsers
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for older browsers
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Other"
 
@@ -44,22 +65,30 @@ export default function HomePage() {
   const [locText, setLocText] = useState<string>("")
   const [locationMapUrl, setLocationMapUrl] = useState<string>("")
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null })
-  const [dateTime, setDateTime] = useState<Date | null>(null)
-    const [localDateTime, setLocalDateTime] = useState<string>("")
+  const [dateTime, setDateTime] = useState<Date | null>(new Date()) // Initialize with current time
+  const [localDateTime, setLocalDateTime] = useState<string>("")
   const [isLocLoading, setIsLocLoading] = useState(false)
-    // For top right leaders
-    const [selectedLeaders, setSelectedLeaders] = useState<string[]>(["modi"])
-    // For CM custom image
-    const [cmImage, setCmImage] = useState<string>("/images/leader-default.png")
+  const [isClient, setIsClient] = useState(false) // Add client-side flag
+  // For top right leaders
+  const [selectedLeaders, setSelectedLeaders] = useState<string[]>([]) // Start with no leaders selected
+  // For CM custom image
+  const [cmImage, setCmImage] = useState<string>("/images/leader-default.png")
   const [selectedCMName, setSelectedCMName] = useState<string>("")
-    // For custom leader/image (top-right custom entry)
-    const [customImage, setCustomImage] = useState<string>("/images/leader-default.png")
-    const [customName, setCustomName] = useState<string>("")
+  // For custom leader/image (top-right custom entry)
+  const [customImage, setCustomImage] = useState<string>("/images/leader-default.png")
+  const [customName, setCustomName] = useState<string>("")
+  // Control whether to include Modi photo
+  const [includeModiPhoto, setIncludeModiPhoto] = useState<boolean>(true) // Default to true
   const [certData, setCertData] = useState<CertificateData | null>(null)
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null) // data URL of canvas
   const [reportUrl, setReportUrl] = useState<string | null>(null) // app link used for QR / tweet
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { currentLanguage: t } = useLanguage()
+
+  // Fix hydration: only run on client
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     if (!issueImage) return
@@ -73,10 +102,13 @@ export default function HomePage() {
     })()
   }, [issueImage])
 
-    // Fix hydration error: set local date/time only on client
-    useEffect(() => {
-      setLocalDateTime((dateTime ?? new Date()).toLocaleString())
-    }, [dateTime])
+  // Fix hydration error: set local date/time only on client
+  useEffect(() => {
+    if (isClient) {
+      const currentTime = dateTime ?? new Date()
+      setLocalDateTime(currentTime.toLocaleString())
+    }
+  }, [dateTime, isClient])
 
   const canGenerate = useMemo(() => {
     return Boolean(issueImage && leaderPreview)
@@ -84,7 +116,7 @@ export default function HomePage() {
 
   const handleGenerate = async () => {
     if (!issueImage) return;
-    const id = crypto.randomUUID();
+    const id = generateUUID();
     const url = `/report/${id}` // Just the path, domain handled in SocialShare;
 
     // Build top leaders array
@@ -98,8 +130,10 @@ export default function HomePage() {
       })
       .filter((leader): leader is { url: string; name: string } => Boolean(leader));
 
-    // Always include Modi at bottom left
-    const modiImage = LEADER_OPTIONS.find((opt) => opt.key === "modi")?.imageUrl || "/images/pm-modi.png";
+    // Conditionally include Modi at bottom left
+    const modiImage = includeModiPhoto 
+      ? (LEADER_OPTIONS.find((opt) => opt.key === "modi")?.imageUrl || "/images/pm-modi.png")
+      : "/images/leader-default.png"; // Use placeholder if Modi photo is disabled
 
     const data = {
       id: id,
@@ -134,7 +168,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-dvh bg-white text-gray-900">
+    <main className="min-h-dvh bg-white text-gray-900" suppressHydrationWarning>
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
         <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-balance">Civic Issue Certificate</h1>
@@ -239,7 +273,27 @@ export default function HomePage() {
 
             <div className="grid gap-2">
               <Label>Capture Time</Label>
-                <div className="text-sm">{localDateTime}</div>
+              {isClient ? (
+                <div className="space-y-2">
+                  <Input
+                    type="datetime-local"
+                    value={localDateTime ? new Date(localDateTime).toISOString().slice(0, 16) : ""}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const newDateTime = new Date(e.target.value)
+                        setDateTime(newDateTime)
+                        setLocalDateTime(newDateTime.toLocaleString())
+                      }
+                    }}
+                    className="text-sm"
+                  />
+                  <div className="text-xs text-gray-600">
+                    Current time: {localDateTime}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-400">Loading...</div>
+              )}
             </div>
 
             <div className="grid gap-2">
@@ -314,10 +368,34 @@ export default function HomePage() {
                   </div>
                 )}
               </div>
-            )}            <p className="text-xs text-gray-600">
-              Note: PM Modi's photo will always appear at the bottom left of the certificate (4x larger).
-              Select additional leaders to appear at the top right.
-            </p>
+            )}
+            
+            {/* Modi Photo Control */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300"
+                  checked={includeModiPhoto}
+                  onChange={(e) => setIncludeModiPhoto(e.target.checked)}
+                />
+                <span>Include PM Modi's Photo (Bottom Left)</span>
+              </Label>
+              <p className="text-xs text-gray-600">
+                PM Modi's photo will appear at the bottom left of the certificate (4x larger) if enabled.
+                Select additional leaders to appear at the top right.
+              </p>
+            </div>
+
+            {/* Legal Disclaimer */}
+            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-xs text-amber-800 font-medium mb-1">⚠️ IMPORTANT DISCLAIMER</p>
+              <p className="text-xs text-amber-700">
+                This is <strong>NOT an official government document</strong>. This is a citizen-generated report for civic awareness purposes only. 
+                The use of leader photos does not imply official endorsement or government affiliation. 
+                No official action is guaranteed from this report.
+              </p>
+            </div>
 
             {selectedLeaders.includes("custom") && (
               <div className="space-y-2">
@@ -361,10 +439,19 @@ export default function HomePage() {
               setLocText("")
               setLocationMapUrl("")
               setCoords({ lat: null, lng: null })
-              setDateTime(null)
+              const now = new Date()
+              setDateTime(now)
+              setLocalDateTime(now.toLocaleString())
+              setSelectedLeaders([]) // reset selected leaders
+              setCmImage("/images/leader-default.png") // reset CM image
+              setSelectedCMName("") // reset CM name
+              setCustomImage("/images/leader-default.png") // reset custom image
+              setCustomName("") // reset custom name
+              setIncludeModiPhoto(true) // reset to default (enabled)
               setCertData(null)
               setGeneratedUrl(null)
               setReportUrl(null)
+              // Note: isClient should not be reset as it's needed for hydration
             }}
           >
             Reset

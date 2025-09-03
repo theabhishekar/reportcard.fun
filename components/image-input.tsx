@@ -1,3 +1,11 @@
+/**
+ * Image Input Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { useRef, useState } from "react"

@@ -1,3 +1,11 @@
+/**
+ * Location and EXIF Data Processing
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 import * as exifr from "exifr"
 
 export async function getLocationFromImageOrDevice(file: File): Promise<{

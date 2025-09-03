@@ -1,3 +1,11 @@
+/**
+ * State CM Picker Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import * as React from "react"
@@ -155,6 +163,12 @@ export function StateCMPicker({ onSelect, className }: Props) {
           <p className="mt-2 text-xs text-muted-foreground">
             Images are fetched from Wikipedia (upload.wikimedia.org) and are generally CORS‑safe for canvas rendering.
           </p>
+          
+          {/* Legal Disclaimer */}
+          <div className="mt-3 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+            <strong>⚠️ DISCLAIMER:</strong> This is NOT an official government document. 
+            The use of Chief Minister photos does not imply official endorsement or government affiliation.
+          </div>
         </div>
       )}
     </div>

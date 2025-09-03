@@ -1,3 +1,11 @@
+/**
+ * Language Selector Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { languages } from "@/lib/translations"

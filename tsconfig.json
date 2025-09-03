@@ -1,4 +1,8 @@
 {
+  // TypeScript Configuration for Civic Issue Reporting App
+  // @author Chandravijay Agrawal
+  // @twitter @Mehonestperson
+  // @url https://twitter.com/Mehonestperson
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

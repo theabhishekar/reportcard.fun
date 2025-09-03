@@ -1,3 +1,11 @@
+/**
+ * Indian States and Union Territories Data
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 export const INDIAN_STATES = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -41,42 +49,42 @@ export const INDIAN_UNION_TERRITORIES = [
 ]
 
 export const CURRENT_CM_BY_REGION: Record<string, { name: string; wikiTitle: string } | null> = {
-  // States (as-of mid‑2024)
-  "Andhra Pradesh": { name: "N. Chandrababu Naidu", wikiTitle: "N._Chandrababu_Naidu" },
-  "Arunachal Pradesh": { name: "Pema Khandu", wikiTitle: "Pema_Khandu" },
-  Assam: { name: "Himanta Biswa Sarma", wikiTitle: "Himanta_Biswa_Sarma" },
-  Bihar: { name: "Nitish Kumar", wikiTitle: "Nitish_Kumar" },
-  Chhattisgarh: { name: "Vishnu Deo Sai", wikiTitle: "Vishnu_Deo_Sai" },
-  Goa: { name: "Pramod Sawant", wikiTitle: "Pramod_Sawant" },
-  Gujarat: { name: "Bhupendrabhai Patel", wikiTitle: "Bhupendrabhai_Patel" },
-  Haryana: { name: "Nayab Singh Saini", wikiTitle: "Nayab_Singh_Saini" },
-  "Himachal Pradesh": { name: "Sukhvinder Singh Sukhu", wikiTitle: "Sukhvinder_Singh_Sukhu" },
-  Jharkhand: { name: "Champai Soren", wikiTitle: "Champai_Soren" },
-  Karnataka: { name: "Siddaramaiah", wikiTitle: "Siddaramaiah" },
-  Kerala: { name: "Pinarayi Vijayan", wikiTitle: "Pinarayi_Vijayan" },
-  "Madhya Pradesh": { name: "Mohan Yadav", wikiTitle: "Mohan_Yadav" },
-  Maharashtra: { name: "Eknath Shinde", wikiTitle: "Eknath_Shinde" },
-  Manipur: { name: "N. Biren Singh", wikiTitle: "N._Biren_Singh" },
-  Meghalaya: { name: "Conrad Sangma", wikiTitle: "Conrad_Sangma" },
-  Mizoram: { name: "Lalduhoma", wikiTitle: "Lalduhoma" },
-  Nagaland: { name: "Neiphiu Rio", wikiTitle: "Neiphiu_Rio" },
-  Odisha: { name: "Mohan Charan Majhi", wikiTitle: "Mohan_Charan_Majhi" },
-  Punjab: { name: "Bhagwant Mann", wikiTitle: "Bhagwant_Mann" },
-  Rajasthan: { name: "Bhajan Lal Sharma", wikiTitle: "Bhajan_Lal_Sharma" },
-  Sikkim: { name: "Prem Singh Tamang", wikiTitle: "Prem_Singh_Tamang" },
-  "Tamil Nadu": { name: "M. K. Stalin", wikiTitle: "M._K._Stalin" },
-  Telangana: { name: "Revanth Reddy", wikiTitle: "Revanth_Reddy" },
-  Tripura: { name: "Manik Saha", wikiTitle: "Manik_Saha" },
-  "Uttar Pradesh": { name: "Yogi Adityanath", wikiTitle: "Yogi_Adityanath" },
-  Uttarakhand: { name: "Pushkar Singh Dhami", wikiTitle: "Pushkar_Singh_Dhami" },
-  "West Bengal": { name: "Mamata Banerjee", wikiTitle: "Mamata_Banerjee" },
+  // States (as-of 2024)
+  "Andhra Pradesh": { name: "Sri Nara Chandrababu Naidu", wikiTitle: "N._Chandrababu_Naidu" },
+  "Arunachal Pradesh": { name: "Shri Pema Khandu", wikiTitle: "Pema_Khandu" },
+  Assam: { name: "Shri Himanta Biswa Sarma", wikiTitle: "Himanta_Biswa_Sarma" },
+  Bihar: { name: "Shri Nitish Kumar", wikiTitle: "Nitish_Kumar" },
+  Chhattisgarh: { name: "Shri Vishnu Deo Sai", wikiTitle: "Vishnu_Deo_Sai" },
+  Goa: { name: "Shri Pramod Sawant", wikiTitle: "Pramod_Sawant" },
+  Gujarat: { name: "Shri Bhupendra Patel", wikiTitle: "Bhupendra_Patel" },
+  Haryana: { name: "Shri Nayab Singh Saini", wikiTitle: "Nayab_Singh_Saini" },
+  "Himachal Pradesh": { name: "Shri Sukhvinder Singh Sukhu", wikiTitle: "Sukhvinder_Singh_Sukhu" },
+  Jharkhand: { name: "Shri Hemant Soren", wikiTitle: "Hemant_Soren" },
+  Karnataka: { name: "Shri Siddaramaiah", wikiTitle: "Siddaramaiah" },
+  Kerala: { name: "Shri Pinarayi Vijayan", wikiTitle: "Pinarayi_Vijayan" },
+  "Madhya Pradesh": { name: "Shri Mohan Yadav", wikiTitle: "Mohan_Yadav_(politician)" },
+  Maharashtra: { name: "Shri Devendra Fadnavis", wikiTitle: "Devendra_Fadnavis" },
+  Manipur: null, // No CM currently
+  Meghalaya: { name: "Shri Conrad Kongkal Sangma", wikiTitle: "Conrad_Sangma" }, // Fixed Wikipedia title
+  Mizoram: { name: "Shri PU Lalduhoma", wikiTitle: "Lalduhoma" }, // Fixed Wikipedia title
+  Nagaland: { name: "Shri Neiphiu Rio", wikiTitle: "Neiphiu_Rio" },
+  Odisha: { name: "Shri Mohan Charan Majhi", wikiTitle: "Mohan_Charan_Majhi" },
+  Punjab: { name: "Shri Bhagwant Singh Mann", wikiTitle: "Bhagwant_Singh_Mann" },
+  Rajasthan: { name: "Shri Bhajan Lal Sharma", wikiTitle: "Bhajan_Lal_Sharma" },
+  Sikkim: { name: "Shri Prem Singh Tamang (Golay)", wikiTitle: "Prem_Singh_Tamang" },
+  "Tamil Nadu": { name: "Shri M. K. Stalin", wikiTitle: "M._K._Stalin" },
+  Telangana: { name: "Shri A Revanth Reddy", wikiTitle: "A._Revanth_Reddy" },
+  Tripura: { name: "Dr. Manik Saha", wikiTitle: "Manik_Saha" },
+  "Uttar Pradesh": { name: "Shri Yogi Aditya Nath", wikiTitle: "Yogi_Adityanath" },
+  Uttarakhand: { name: "Shri Pushkar Singh Dhami", wikiTitle: "Pushkar_Singh_Dhami" },
+  "West Bengal": { name: "Km. Mamata Banerjee", wikiTitle: "Mamata_Banerjee" },
 
   // Union Territories
-  Delhi: { name: "Arvind Kejriwal", wikiTitle: "Arvind_Kejriwal" },
-  Puducherry: { name: "N. Rangaswamy", wikiTitle: "N._Rangaswamy" },
+  Delhi: { name: "Smt. Rekha Gupta", wikiTitle: "Rekha_Gupta_(politician)" },
+  Puducherry: { name: "Shri N. Rangaswamy", wikiTitle: "N._Rangaswamy" },
+  "Jammu and Kashmir": { name: "Shri Omar Abdullah", wikiTitle: "Omar_Abdullah" },
 
   // UTs with no CM currently
-  "Jammu and Kashmir": null,
   Ladakh: null,
   Chandigarh: null,
   "Andaman and Nicobar Islands": null,

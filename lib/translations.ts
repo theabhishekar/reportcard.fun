@@ -1,3 +1,11 @@
+/**
+ * Multi-language Translations for Civic Issue App
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 export type Language = {
   code: string
   name: string
@@ -144,6 +152,54 @@ export const languages: Language[] = [
       chooseLeaders: 'नेते निवडा',
       generateCertificate: 'प्रमाणपत्र तयार करा',
       shareOnline: 'ऑनलाईन शेअर करा'
+    }
+  },
+  {
+    code: 'kn',
+    name: 'Kannada',
+    nativeName: 'ಕನ್ನಡ',
+    translations: {
+      title: 'ನಾಗರಿಕ ಸಮಸ್ಯೆ ಪ್ರಮಾಣಪತ್ರ',
+      subtitle: 'ಜನರ ಧ್ವನಿ',
+      dateTimeLabel: 'ದಿನಾಂಕ ಮತ್ತು ಸಮಯ',
+      locationLabel: 'ಸ್ಥಳ',
+      issueLabel: 'ಸಮಸ್ಯೆ',
+      noteLabel: 'ಟಿಪ್ಪಣಿ',
+      footerText: 'ಈ ಪ್ರಮಾಣಪತ್ರವು ಒಬ್ಬ ನಾಗರಿಕನಿಂದ ವರದಿ ಮಾಡಲಾದ ನಾಗರಿಕ ಸಮಸ್ಯೆಯ ದಾಖಲೆ.',
+      scanQrText: 'ವರದಿಯನ್ನು ನೋಡಲು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ',
+      slogan: 'ನಿಮ್ಮ ಧ್ವನಿ ಮುಖ್ಯವಾಗಿದೆ',
+      impactText: 'ಉತ್ತಮ ಸಮುದಾಯಗಳಿಗಾಗಿ ಒಟ್ಟಿಗೆ',
+      selectIssueType: 'ಸಮಸ್ಯೆಯ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+      enterLocation: 'ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ',
+      addNote: 'ಟಿಪ್ಪಣಿಯನ್ನು ಸೇರಿಸಿ (ಐಚ್ಛಿಕ)',
+      uploadPhoto: 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+      chooseLeaders: 'ನಾಯಕರನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+      generateCertificate: 'ಪ್ರಮಾಣಪತ್ರವನ್ನು ರಚಿಸಿ',
+      shareOnline: 'ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ'
+    }
+  },
+  {
+    code: 'bh',
+    name: 'Bhojpuri',
+    nativeName: 'भोजपुरी',
+    translations: {
+      title: 'नागरिक समस्या प्रमाणपत्र',
+      subtitle: 'जनता के आवाज',
+      dateTimeLabel: 'तारीख आउर समय',
+      locationLabel: 'जगह',
+      issueLabel: 'समस्या',
+      noteLabel: 'नोट',
+      footerText: 'ई प्रमाणपत्र एगो नागरिक द्वारा रिपोर्ट कइल गइल नागरिक समस्या के दस्तावेज करेला।',
+      scanQrText: 'रिपोर्ट देखे खातिर स्कैन करीं',
+      slogan: 'तहार आवाज महत्वपूर्ण बा',
+      impactText: 'बेहतर समुदाय खातिर एक साथे',
+      selectIssueType: 'समस्या के प्रकार चुनीं',
+      enterLocation: 'जगह भरीं',
+      addNote: 'नोट जोड़ीं (वैकल्पिक)',
+      uploadPhoto: 'फोटो अपलोड करीं',
+      chooseLeaders: 'नेता चुनीं',
+      generateCertificate: 'प्रमाणपत्र बनावीं',
+      shareOnline: 'ऑनलाइन साझा करीं'
     }
   }
 ]

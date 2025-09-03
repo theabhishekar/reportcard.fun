@@ -1,3 +1,11 @@
+/**
+ * Wikipedia API Integration
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 export type WikiImageResult = {
   imageUrl?: string
   pageUrl?: string

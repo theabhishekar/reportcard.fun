@@ -1,3 +1,11 @@
+/**
+ * Email RTI Options Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { useState } from "react"

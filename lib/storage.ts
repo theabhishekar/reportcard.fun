@@ -1,3 +1,11 @@
+/**
+ * Local Storage Management for Civic Reports
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 import type { PersistedReport } from "@/components/certificate-canvas"
 
 const KEY = "civic_reports_v1"

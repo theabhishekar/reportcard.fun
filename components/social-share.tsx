@@ -1,3 +1,11 @@
+/**
+ * Social Share Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -27,7 +35,7 @@ export function SocialShare({ imageDataUrl, issueType, location, url }: SocialSh
         )
       case 'whatsapp':
         return encodeURIComponent(
-          `${baseText}\n\n📍 Help improve our city!\n� Join the movement at reportcard.fun\n\n#CitizenAction`
+          `${baseText}\n\n📍 Help improve our city!\n Join the movement at reportcard.fun\n\n#CitizenAction`
         )
       case 'facebook':
       case 'linkedin':
@@ -109,48 +117,59 @@ export function SocialShare({ imageDataUrl, issueType, location, url }: SocialSh
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <Button
-        className="bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white"
-        onClick={() => handleShare('twitter')}
-      >
-        Share on Twitter
-      </Button>
+    <div className="space-y-3">
+      {/* Legal Disclaimer */}
+      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+        <p className="text-xs text-amber-800 font-medium mb-1">⚠️ IMPORTANT DISCLAIMER</p>
+        <p className="text-xs text-amber-700">
+          This is <strong>NOT an official government document</strong>. This is a citizen-generated report for civic awareness purposes only. 
+          Sharing this report does not imply official endorsement or government affiliation.
+        </p>
+      </div>
       
-      <Button
-        className="bg-[#25D366] hover:bg-[#128C7E] text-white"
-        onClick={() => handleShare('whatsapp')}
-      >
-        Share on WhatsApp
-      </Button>
-      
-      <Button
-        className="bg-[#4267B2] hover:bg-[#365899] text-white"
-        onClick={() => handleShare('facebook')}
-      >
-        Share on Facebook
-      </Button>
-      
-      <Button
-        className="bg-[#0077b5] hover:bg-[#006399] text-white"
-        onClick={() => handleShare('linkedin')}
-      >
-        Share on LinkedIn
-      </Button>
-      
-      <Button
-        className="bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F56040] hover:opacity-90 text-white"
-        onClick={() => handleShare('instagram')}
-      >
-        Share on Instagram
-      </Button>
-      
-      <Button
-        variant="outline"
-        onClick={() => handleShare('native')}
-      >
-        Share...
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          className="bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white"
+          onClick={() => handleShare('twitter')}
+        >
+          Share on Twitter
+        </Button>
+        
+        <Button
+          className="bg-[#25D366] hover:bg-[#128C7E] text-white"
+          onClick={() => handleShare('whatsapp')}
+        >
+          Share on WhatsApp
+        </Button>
+        
+        <Button
+          className="bg-[#4267B2] hover:bg-[#365899] text-white"
+          onClick={() => handleShare('facebook')}
+        >
+          Share on Facebook
+        </Button>
+        
+        <Button
+          className="bg-[#0077b5] hover:bg-[#006399] text-white"
+          onClick={() => handleShare('linkedin')}
+        >
+          Share on LinkedIn
+        </Button>
+        
+        <Button
+          className="bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F56040] hover:opacity-90 text-white"
+          onClick={() => handleShare('instagram')}
+        >
+          Share on Instagram
+        </Button>
+        
+        <Button
+          variant="outline"
+          onClick={() => handleShare('native')}
+        >
+          Share...
+        </Button>
+      </div>
     </div>
   )
 }

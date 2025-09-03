@@ -1,3 +1,11 @@
+/**
+ * State UT CM Picker Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 import { useState } from "react"
 import { getWikipediaLeadImageUrl } from "@/lib/wiki"
@@ -108,6 +116,12 @@ export function StateUtCMPicker({ onSelect }: Props) {
           </CardContent>
         </Card>
       )}
+      
+      {/* Legal Disclaimer */}
+      <div className="mt-3 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+        <strong>⚠️ DISCLAIMER:</strong> This is NOT an official government document. 
+        The use of Chief Minister photos does not imply official endorsement or government affiliation.
+      </div>
     </div>
   )
 }

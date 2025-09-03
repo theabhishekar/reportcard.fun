@@ -6,9 +6,13 @@ import { LanguageProvider } from '@/lib/language-context'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Civic Issue Reporting App',
+  description: 'A modern web application for reporting and tracking civic issues in your community. Created by Chandravijay Agrawal.',
+  generator: 'Next.js',
+  authors: [{ name: 'Chandravijay Agrawal', url: 'https://twitter.com/Mehonestperson' }],
+  keywords: ['civic issues', 'community reporting', 'government accountability', 'public service'],
+  creator: 'Chandravijay Agrawal',
+  publisher: 'Chandravijay Agrawal',
 }
 
 export default function RootLayout({

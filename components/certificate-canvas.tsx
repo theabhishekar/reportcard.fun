@@ -1,3 +1,11 @@
+/**
+ * Certificate Canvas Component
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 "use client"
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react"
@@ -237,34 +245,36 @@ export const CertificateCanvas = forwardRef<
         const bottomPadding = 40
         const spaceBetween = 40 // Space between Modi photo and QR code
         
-        // Modi photo at bottom left, 4x bigger
-        try {
-          const modiImg = await loadImage(data.modiImageUrl)
-          const modiW = 280 // Increased width
-          const modiH = 320 // Increased height
-          const modiX = bottomPadding
-          const modiY = bottomSectionY
-          
-          // Draw border
-          ctx.save()
-          ctx.strokeStyle = border
-          ctx.lineWidth = 4
-          ctx.strokeRect(modiX, modiY, modiW, modiH)
-          
-          // Draw image with padding
-          ctx.drawImage(modiImg, modiX + 8, modiY + 8, modiW - 16, modiH - 16)
-          ctx.restore()
-        } catch {
-          const modiW = 280
-          const modiH = 320
-          const modiX = bottomPadding
-          const modiY = bottomSectionY
-          
-          ctx.fillStyle = "#F3F4F6"
-          ctx.fillRect(modiX, modiY, modiW, modiH)
-          ctx.fillStyle = subText
-          ctx.font = "600 18px system-ui, -apple-system, Segoe UI, Roboto"
-          ctx.fillText("PM Modi", modiX + 80, modiY + 160)
+        // Modi photo at bottom left, 4x bigger (only if not default placeholder)
+        if (data.modiImageUrl && !data.modiImageUrl.includes("leader-default.png")) {
+          try {
+            const modiImg = await loadImage(data.modiImageUrl)
+            const modiW = 280 // Increased width
+            const modiH = 320 // Increased height
+            const modiX = bottomPadding
+            const modiY = bottomSectionY
+            
+            // Draw border
+            ctx.save()
+            ctx.strokeStyle = border
+            ctx.lineWidth = 4
+            ctx.strokeRect(modiX, modiY, modiW, modiH)
+            
+            // Draw image with padding
+            ctx.drawImage(modiImg, modiX + 8, modiY + 8, modiW - 16, modiH - 16)
+            ctx.restore()
+          } catch {
+            const modiW = 280
+            const modiH = 320
+            const modiX = bottomPadding
+            const modiY = bottomSectionY
+            
+            ctx.fillStyle = "#F3F4F6"
+            ctx.fillRect(modiX, modiY, modiW, modiH)
+            ctx.fillStyle = subText
+            ctx.font = "600 18px system-ui, -apple-system, Segoe UI, Roboto"
+            ctx.fillText("PM Modi", modiX + 80, modiY + 160)
+          }
         }
 
                     // QR code at bottom right
@@ -333,6 +343,12 @@ export const CertificateCanvas = forwardRef<
           ctx.font = "500 13px system-ui, -apple-system, Segoe UI, Roboto"
         }
         ctx.fillText(t.translations.footerText, 40, footerY)
+        
+        // Legal Disclaimer
+        ctx.font = "400 11px system-ui, -apple-system, Segoe UI, Roboto"
+        ctx.fillStyle = "#6B7280" // Lighter color for disclaimer
+        ctx.fillText("DISCLAIMER: This is NOT an official government document. This is a citizen-generated", 40, footerY + 15)
+        ctx.fillText("report for civic awareness purposes only. No official action is guaranteed.", 40, footerY + 30)
 
         try {
           // Set quality to 1 and ensure background is preserved

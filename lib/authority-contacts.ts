@@ -1,3 +1,11 @@
+/**
+ * Authority Contacts and RTI Templates
+ * 
+ * @author Chandravijay Agrawal
+ * @twitter @Mehonestperson
+ * @url https://twitter.com/Mehonestperson
+ */
+
 type AuthorityContact = {
   name: string
   email: string

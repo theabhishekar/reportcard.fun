@@ -1,4 +1,8 @@
 {
+  // shadcn/ui Components Configuration
+  // @author Chandravijay Agrawal
+  // @twitter @Mehonestperson
+  // @url https://twitter.com/Mehonestperson
   "$schema": "https://ui.shadcn.com/schema.json",
   "style": "new-york",
   "rsc": true,
