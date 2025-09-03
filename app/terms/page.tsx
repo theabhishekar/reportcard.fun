@@ -12,12 +12,12 @@ export default function TermsPage() {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">🚨 Important Legal Disclaimer</h2>
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
                 <p className="font-medium text-gray-900">
-                  This platform is designed exclusively for reporting civic infrastructure issues such as potholes, 
+                  This is a simple spare time project designed to help report civic infrastructure issues such as potholes, 
                   garbage collection problems, broken streetlights, and similar public facility concerns.
                 </p>
               </div>
               <p className="text-gray-700">
-                <strong>Platform Immunity:</strong> We are an intermediary platform under Section 79 of the Information Technology Act, 2000. 
+                <strong>Legal Note:</strong> We are an intermediary platform under Section 79 of the Information Technology Act, 2000. 
                 All content is user-generated. We do not create, verify, endorse, or take responsibility for any user-submitted reports or claims.
               </p>
             </section>

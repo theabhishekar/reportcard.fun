@@ -223,6 +223,18 @@ export default function HomePage() {
 
   return (
     <main className="min-h-dvh bg-white text-gray-900" suppressHydrationWarning>
+      {/* Just Launched Banner - Very Top */}
+      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-200 p-3">
+        <div className="flex items-center justify-center gap-3">
+          <div className="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-full text-sm font-medium animate-bounce">
+            🎉 Just Launched!
+          </div>
+          <div className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg animate-pulse">
+            ✨ NEW FEATURES
+          </div>
+        </div>
+      </div>
+
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
         <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-balance">Civic Issue Certificate</h1>
@@ -643,22 +655,13 @@ export default function HomePage() {
         </div>
       </div>
 
+
       {/* Community Insights Preview */}
       <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-lg border relative overflow-hidden">
-        {/* New Feature Badge */}
-        <div className="absolute top-3 right-3 z-10">
-          <div className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
-            ✨ NEW
-          </div>
-        </div>
-        
         <div className="flex items-center justify-center gap-2 mb-4">
           <h3 className="text-lg font-semibold text-gray-900 text-center">
             📊 Community Insights
           </h3>
-          <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-md text-xs font-medium animate-bounce">
-            🎉 Just Launched!
-          </div>
         </div>
         
         <div className="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-400 p-3 mb-4 rounded-r-lg">
