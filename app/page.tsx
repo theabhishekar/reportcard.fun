@@ -48,8 +48,6 @@ type LeaderOption = {
 }
 
 const LEADER_OPTIONS: LeaderOption[] = [
-  { key: "modi", label: "Hon' PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
-  { key: "gadkari", label: "Hon' Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
   { key: "cm", label: "Hon' State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
   { key: "custom", label: "Add Custom Leader/Officer", imageUrl: "/images/leader-default.png" },
 ]
@@ -121,19 +119,21 @@ export default function HomePage() {
 
     // Build top leaders array
     const topLeaders = selectedLeaders
-      .filter((key) => key !== "modi") // exclude Modi from top, always at bottom
       .map((key) => {
-  if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
-  if (key === "custom") return { url: customImage, name: customName || "Hon' Selected Leader" };
+        if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
+        if (key === "custom") return { url: customImage, name: customName || "Hon' Selected Leader" };
         const found = LEADER_OPTIONS.find((opt) => opt.key === key);
         return found ? { url: found.imageUrl, name: found.label } : null;
       })
       .filter((leader): leader is { url: string; name: string } => Boolean(leader));
 
-    // Conditionally include Modi at bottom left
-    const modiImage = includeModiPhoto 
-      ? (LEADER_OPTIONS.find((opt) => opt.key === "modi")?.imageUrl || "/images/pm-modi.png")
-      : "/images/leader-default.png"; // Use placeholder if Modi photo is disabled
+    // Include Modi at bottom left if selected, otherwise check for Gadkari
+    let modiImage = "/images/leader-default.png";
+    if (includeModiPhoto) {
+      modiImage = "/images/pm-modi.png";
+    } else if (selectedLeaders.includes("gadkari")) {
+      modiImage = "/images/nitin-gadkari.jpg";
+    }
 
     const data = {
       id: id,
@@ -314,8 +314,73 @@ export default function HomePage() {
             <CardTitle className="text-base">3) {t.translations.chooseLeaders}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Main Leader Selection */}
             <div className="space-y-3">
-              <Label>Select Leaders (Top Right)</Label>
+              <Label>Select Main Leader (Bottom Left)</Label>
+              <div className="grid grid-cols-1 gap-2">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="mainLeader"
+                    className="h-4 w-4 rounded border-gray-300"
+                    checked={includeModiPhoto}
+                    onChange={() => setIncludeModiPhoto(true)}
+                  />
+                  <span className="text-sm">Hon' PM Narendra Modi</span>
+                  <div className="flex flex-col items-center ml-2">
+                    <img 
+                      src="/images/pm-modi.png" 
+                      alt="PM Modi"
+                      className="h-8 w-8 rounded-full object-cover border"
+                    />
+                  </div>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="mainLeader"
+                    className="h-4 w-4 rounded border-gray-300"
+                    checked={!includeModiPhoto && selectedLeaders.includes("gadkari")}
+                    onChange={() => {
+                      setIncludeModiPhoto(false);
+                      setSelectedLeaders(prev => [...prev.filter(k => k !== "gadkari"), "gadkari"]);
+                    }}
+                  />
+                  <span className="text-sm">Hon' Nitin Gadkari</span>
+                  <div className="flex flex-col items-center ml-2">
+                    <img 
+                      src="/images/nitin-gadkari.jpg" 
+                      alt="Nitin Gadkari"
+                      className="h-8 w-8 rounded-full object-cover border"
+                    />
+                  </div>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="mainLeader"
+                    className="h-4 w-4 rounded border-gray-300"
+                    checked={!includeModiPhoto && !selectedLeaders.includes("gadkari")}
+                    onChange={() => {
+                      setIncludeModiPhoto(false);
+                      setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
+                    }}
+                  />
+                  <span className="text-sm">No Main Leader Photo</span>
+                  <div className="flex flex-col items-center ml-2">
+                    <img 
+                      src="/images/leader-default.png" 
+                      alt="No leader"
+                      className="h-8 w-8 rounded-full object-cover border"
+                    />
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Additional Leaders Selection */}
+            <div className="space-y-3">
+              <Label>Select Additional Leaders (Top Right)</Label>
               <div className="grid grid-cols-1 gap-2">
                 {LEADER_OPTIONS.map((opt) => (
                   <label key={opt.key} className="flex items-center gap-2">
@@ -326,7 +391,7 @@ export default function HomePage() {
                       onChange={(e) => {
                         if (e.target.checked) {
                           setSelectedLeaders((prev) => [...prev, opt.key]);
-                        } else if (opt.key !== "modi") { // Don't unselect Modi
+                        } else {
                           setSelectedLeaders((prev) => prev.filter((k) => k !== opt.key));
                         }
                       }}
@@ -338,18 +403,44 @@ export default function HomePage() {
                         alt={opt.label}
                         className="h-8 w-8 rounded-full object-cover border"
                       />
-                      {opt.key === "gadkari" && (
-                        <span className="text-xs text-red-600 font-medium">Nitin Gadkari</span>
-                      )}
                     </div>
                   </label>
                 ))}
               </div>
             </div>
 
-              {selectedLeaders.includes("cm") && (
+            {selectedLeaders.includes("cm") && (
               <div className="space-y-2">
                 <Label className="text-sm">Select State/UT CM Photo</Label>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="cmPhoto"
+                      className="h-4 w-4 rounded border-gray-300"
+                      checked={cmImage === "/images/leader-default.png"}
+                      onChange={() => setCmImage("/images/leader-default.png")}
+                    />
+                    <span className="text-sm">Use Default CM Photo</span>
+                    <div className="flex flex-col items-center ml-2">
+                      <img 
+                        src="/images/leader-default.png" 
+                        alt="Default CM"
+                        className="h-8 w-8 rounded-full object-cover border"
+                      />
+                    </div>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="cmPhoto"
+                      className="h-4 w-4 rounded border-gray-300"
+                      checked={cmImage !== "/images/leader-default.png"}
+                      onChange={() => {}} // This will be handled by the file input
+                    />
+                    <span className="text-sm">Upload Custom CM Photo</span>
+                  </label>
+                </div>
                 <LeaderPhotoInput
                   defaultUrl="/images/leader-default.png"
                   onChange={(_: File | null, preview: string | null, name?: string) => {
@@ -357,7 +448,7 @@ export default function HomePage() {
                     if (name) setSelectedCMName(name);
                   }}
                 />
-                {cmImage && (
+                {cmImage && cmImage !== "/images/leader-default.png" && (
                   <div className="space-y-1">
                     <img
                       src={cmImage}
@@ -370,22 +461,7 @@ export default function HomePage() {
               </div>
             )}
             
-            {/* Modi Photo Control */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300"
-                  checked={includeModiPhoto}
-                  onChange={(e) => setIncludeModiPhoto(e.target.checked)}
-                />
-                <span>Include PM Modi's Photo (Bottom Left)</span>
-              </Label>
-              <p className="text-xs text-gray-600">
-                PM Modi's photo will appear at the bottom left of the certificate (4x larger) if enabled.
-                Select additional leaders to appear at the top right.
-              </p>
-            </div>
+
 
             {/* Legal Disclaimer */}
             <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
