@@ -229,15 +229,18 @@ export default function HomePage() {
           <div className="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-full text-sm font-medium animate-bounce">
             🎉 Just Launched!
           </div>
-          <div className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg animate-pulse">
-            ✨ NEW FEATURES
-          </div>
+          <a href="/admin" className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg animate-pulse hover:shadow-xl transition-all duration-300">
+            📊 Analytics Dashboard
+          </a>
         </div>
       </div>
 
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
         <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-balance">Civic Issue Certificate</h1>
+          <h1 className="text-lg font-semibold text-balance">
+            reportcard.fun
+            <span className="text-sm font-normal text-gray-600 ml-2">(Civic Issue Reporter)</span>
+          </h1>
           <div className="flex items-center gap-4">
             <LanguageSelector />
             <a className="text-sm text-blue-600 hover:underline" href="/admin">
