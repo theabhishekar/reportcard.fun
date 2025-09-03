@@ -40,7 +40,7 @@ export default function AdminPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm text-blue-800 font-medium">
-                  🚀 <strong>Brand New:</strong> Real-time community insights powered by GitHub Issues database! 
+                  🚀 <strong>Brand New:</strong> Real-time community insights! 
                   Track civic issues, analyze trends, and monitor community impact - all automatically updated every 6 hours.
                 </p>
               </div>
