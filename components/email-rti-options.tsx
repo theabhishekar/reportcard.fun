@@ -120,13 +120,83 @@ Regards,
               </Button>
             </div>
             
+            {/* Online RTI Filing Steps */}
             <div>
-              <h4 className="font-medium mb-2">Steps to File RTI</h4>
+              <h4 className="font-medium mb-2">📱 Online RTI Filing Steps</h4>
+              <div className="bg-blue-50 p-3 rounded border border-blue-200 mb-3">
+                <p className="text-sm text-blue-800 font-medium mb-2">🌐 Popular Online RTI Portals:</p>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• <strong>rtionline.gov.in</strong> - Official Government Portal (Recommended)</li>
+                  <li>• <strong>rti.gov.in</strong> - RTI Online Filing System</li>
+                  <li>• <strong>rti.india.gov.in</strong> - Central RTI Portal</li>
+                  <li>• <strong>rti.maharashtra.gov.in</strong> - Maharashtra RTI Portal</li>
+                  <li>• <strong>rti.karnataka.gov.in</strong> - Karnataka RTI Portal</li>
+                  <li>• <strong>rti.delhi.gov.in</strong> - Delhi RTI Portal</li>
+                </ul>
+                <p className="text-xs text-blue-600 mt-2">
+                  💡 Tip: Check your state's official RTI portal for faster processing of local issues
+                </p>
+              </div>
+              <ol className="list-decimal pl-5 space-y-1 text-sm">
+                {rtiTemplate.onlineSteps.map((step, i) => (
+                  <li key={i}>{step}</li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Offline RTI Filing Steps */}
+            <div>
+              <h4 className="font-medium mb-2">📄 Offline RTI Filing Steps</h4>
+              <ol className="list-decimal pl-5 space-y-1 text-sm">
+                {rtiTemplate.offlineSteps.map((step, i) => (
+                  <li key={i}>{step}</li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Traditional Steps (Legacy) */}
+            <div>
+              <h4 className="font-medium mb-2">📋 General RTI Filing Information</h4>
               <ol className="list-decimal pl-5 space-y-1 text-sm">
                 {rtiTemplate.steps.map((step, i) => (
                   <li key={i}>{step}</li>
                 ))}
               </ol>
+            </div>
+            
+            <div className="bg-amber-50 p-3 rounded border border-amber-200">
+              <p className="text-sm text-amber-800 font-medium mb-2">💡 Pro Tips:</p>
+              <ul className="text-sm text-amber-700 space-y-1">
+                <li>• <strong>Online filing is faster</strong> and provides instant tracking</li>
+                <li>• <strong>Keep all receipts</strong> and acknowledgment numbers safe</li>
+                <li>• <strong>Follow up after 30 days</strong> if no response received</li>
+                <li>• <strong>File first appeal</strong> if unsatisfied with the response</li>
+                <li>• <strong>Be specific</strong> in your information requests</li>
+              </ul>
+            </div>
+
+            {/* RTI Fees and Requirements */}
+            <div className="bg-green-50 p-3 rounded border border-green-200">
+              <p className="text-sm text-green-800 font-medium mb-2">💰 RTI Filing Requirements:</p>
+              <ul className="text-sm text-green-700 space-y-1">
+                <li>• <strong>Application Fee:</strong> ₹10 (₹5 for BPL families)</li>
+                <li>• <strong>ID Proof Required:</strong> Voter ID, Passport, Aadhar, or Driving License</li>
+                <li>• <strong>Response Time:</strong> 30 days (45 days for complex queries)</li>
+                <li>• <strong>Appeal Deadline:</strong> 30 days from response date</li>
+                <li>• <strong>Language:</strong> Hindi, English, or local language</li>
+              </ul>
+            </div>
+
+            {/* Additional Resources */}
+            <div className="bg-purple-50 p-3 rounded border border-purple-200">
+              <p className="text-sm text-purple-800 font-medium mb-2">📚 Additional Resources:</p>
+              <ul className="text-sm text-purple-700 space-y-1">
+                <li>• <strong>RTI Act 2005:</strong> Complete text available on rti.gov.in</li>
+                <li>• <strong>Sample Applications:</strong> Templates for common issues</li>
+                <li>• <strong>Appeal Process:</strong> How to file first and second appeals</li>
+                <li>• <strong>RTI Activists:</strong> Local groups that can help with filing</li>
+                <li>• <strong>Helpline:</strong> 1800-180-1111 (RTI Helpline)</li>
+              </ul>
             </div>
             
             <p className="text-sm text-gray-600">

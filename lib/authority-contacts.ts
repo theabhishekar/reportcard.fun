@@ -17,6 +17,8 @@ export type RTITemplate = {
   authority: string
   template: string
   steps: string[]
+  onlineSteps: string[]
+  offlineSteps: string[]
 }
 
 // Default authority contacts
@@ -86,6 +88,26 @@ Yours faithfully,
       "6. Keep the acknowledgment/receipt safe",
       "7. Track your application using the registration number",
       "8. You should receive a response within 30 days"
+    ],
+    onlineSteps: [
+      "1. Visit RTI Online Portal (rtionline.gov.in) - Official Government Portal",
+      "2. Create account using your mobile number and email",
+      "3. Select Ministry/Department (e.g., Ministry of Road Transport & Highways)",
+      "4. Fill the online RTI application form",
+      "5. Upload supporting documents (ID proof)",
+      "6. Pay ₹10 fee online using credit/debit card, net banking, or UPI",
+      "7. Submit application and note the registration number",
+      "8. Track status online using the registration number"
+    ],
+    offlineSteps: [
+      "1. Download RTI application form from rtionline.gov.in or write on plain paper",
+      "2. Fill application clearly with your details and information requested",
+      "3. Attach copy of ID proof (Voter ID/Passport/Aadhar)",
+      "4. Purchase ₹10 Indian Postal Order (IPO) or Court Fee Stamp",
+      "5. Submit in person to PIO or send via registered post",
+      "6. Get acknowledgment receipt with registration number",
+      "7. Keep receipt safe for tracking and follow-up",
+      "8. Follow up after 30 days if no response received"
     ]
   },
   "Garbage": {
@@ -124,6 +146,26 @@ Yours faithfully,
       "5. Submit in person or send by registered post",
       "6. Keep acknowledgment/tracking number safe",
       "7. Follow up after 30 days if no response received"
+    ],
+    onlineSteps: [
+      "1. Visit RTI Online Portal (rtionline.gov.in)",
+      "2. Create account with mobile and email verification",
+      "3. Select Ministry of Urban Development or your State Urban Development",
+      "4. Fill online RTI form with specific garbage disposal queries",
+      "5. Upload ID proof and any supporting documents",
+      "6. Pay ₹10 fee online (card/net banking/UPI)",
+      "7. Submit and save registration number",
+      "8. Track application status online"
+    ],
+    offlineSteps: [
+      "1. Write RTI application on plain paper or use downloaded form",
+      "2. Address to PIO of your Municipal Corporation",
+      "3. Clearly state information needed about garbage disposal",
+      "4. Attach copy of ID proof (Voter ID/Passport/Aadhar)",
+      "5. Purchase ₹10 IPO or Court Fee Stamp",
+      "6. Submit in person to Municipal Corporation office",
+      "7. Get acknowledgment with registration number",
+      "8. Follow up after 30 days"
     ]
   },
   "default": {
@@ -163,6 +205,26 @@ Yours faithfully,
       "6. Keep acknowledgment/tracking number",
       "7. Follow up if no response within 30 days",
       "8. You can file first appeal if unsatisfied with response"
+    ],
+    onlineSteps: [
+      "1. Visit RTI Online Portal (rtionline.gov.in)",
+      "2. Create account with mobile and email verification",
+      "3. Select appropriate Ministry/Department for your issue",
+      "4. Fill online RTI application form completely",
+      "5. Upload required documents (ID proof)",
+      "6. Pay ₹10 fee online using available payment methods",
+      "7. Submit application and note registration number",
+      "8. Track status online and follow up as needed"
+    ],
+    offlineSteps: [
+      "1. Write RTI application on plain paper or use form",
+      "2. Address to PIO of relevant authority",
+      "3. Clearly specify information requested",
+      "4. Attach copy of ID proof (Voter ID/Passport/Aadhar)",
+      "5. Purchase ₹10 IPO or Court Fee Stamp",
+      "6. Submit in person or via registered post",
+      "7. Get acknowledgment with registration number",
+      "8. Follow up after 30 days if no response"
     ]
   }
 }
