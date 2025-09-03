@@ -35,6 +35,14 @@ export function AnalyticsDashboard() {
   const [issueSummaries, setIssueSummaries] = useState<IssueSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(25)
+  const [sortField, setSortField] = useState<keyof IssueSummary>('date')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
 
   useEffect(() => {
     async function loadIssues() {
@@ -104,6 +112,70 @@ export function AnalyticsDashboard() {
     acc[issue.userId] = (acc[issue.userId] || 0) + 1
     return acc
   }, {} as Record<string, number>)
+
+  // Filtering and sorting logic
+  const filteredIssues = issueSummaries.filter(issue => {
+    const matchesSearch = searchTerm === '' || 
+      issue.issueType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.userId.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    const matchesStatus = filterStatus === 'all' || issue.status === filterStatus
+    
+    return matchesSearch && matchesStatus
+  })
+
+  const sortedIssues = [...filteredIssues].sort((a, b) => {
+    const aValue = a[sortField]
+    const bValue = b[sortField]
+    
+    if (sortField === 'date') {
+      return sortDirection === 'asc' 
+        ? new Date(aValue).getTime() - new Date(bValue).getTime()
+        : new Date(bValue).getTime() - new Date(aValue).getTime()
+    }
+    
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc' 
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue)
+    }
+    
+    return 0
+  })
+
+  const totalPages = Math.ceil(sortedIssues.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentIssues = sortedIssues.slice(startIndex, endIndex)
+
+  // Pagination handlers
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)))
+  }
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  // Sorting handler
+  const handleSort = (field: keyof IssueSummary) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1) // Reset to first page when sorting
+  }
 
   if (loading) {
     return (
@@ -246,24 +318,115 @@ export function AnalyticsDashboard() {
       {/* Detailed Issues Table */}
       <Card>
         <CardHeader>
-          <CardTitle>All Civic Issues</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>All Civic Issues</CardTitle>
+            <div className="text-sm text-gray-600">
+              Showing {startIndex + 1}-{Math.min(endIndex, sortedIssues.length)} of {sortedIssues.length} issues
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
+          {/* Search and Filter Controls */}
+          <div className="mb-4 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="Search by issue type, location, or user..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  setCurrentPage(1) // Reset to first page when searching
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex gap-2">
+              <select
+                value={filterStatus}
+                onChange={(e) => {
+                  setFilterStatus(e.target.value)
+                  setCurrentPage(1) // Reset to first page when filtering
+                }}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Status</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+              </select>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value))
+                  setCurrentPage(1)
+                }}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value={25}>25 per page</option>
+                <option value={50}>50 per page</option>
+                <option value={100}>100 per page</option>
+              </select>
+            </div>
+          </div>
+          
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-2 font-medium">Issue Type</th>
-                  <th className="text-left py-2 font-medium">Location</th>
-                  <th className="text-left py-2 font-medium">User</th>
-                  <th className="text-left py-2 font-medium">Date</th>
+                  <th 
+                    className="text-left py-2 font-medium cursor-pointer hover:bg-gray-50 select-none"
+                    onClick={() => handleSort('issueType')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Issue Type
+                      {sortField === 'issueType' && (
+                        <span className="text-blue-600">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    className="text-left py-2 font-medium cursor-pointer hover:bg-gray-50 select-none"
+                    onClick={() => handleSort('location')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Location
+                      {sortField === 'location' && (
+                        <span className="text-blue-600">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    className="text-left py-2 font-medium cursor-pointer hover:bg-gray-50 select-none"
+                    onClick={() => handleSort('userId')}
+                  >
+                    <div className="flex items-center gap-1">
+                      User
+                      {sortField === 'userId' && (
+                        <span className="text-blue-600">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    className="text-left py-2 font-medium cursor-pointer hover:bg-gray-50 select-none"
+                    onClick={() => handleSort('date')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Date
+                      {sortDirection === 'asc' ? '↑' : '↓'}
+                    </div>
+                  </th>
                   <th className="text-left py-2 font-medium">Status</th>
                   <th className="text-left py-2 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {issueSummaries.map((issue, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
+                {currentIssues.map((issue, index) => (
+                  <tr key={startIndex + index} className="border-b hover:bg-gray-50">
                     <td className="py-2 capitalize">{issue.issueType}</td>
                     <td className="py-2">{issue.location}</td>
                     <td className="py-2">{issue.userId === 'anonymous' ? 'Anonymous' : issue.userId}</td>
@@ -292,6 +455,62 @@ export function AnalyticsDashboard() {
               </tbody>
             </table>
           </div>
+          
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="mt-6 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                Page {currentPage} of {totalPages}
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 text-sm border rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                
+                {/* Page Numbers */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum: number
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => goToPage(pageNum)}
+                        className={`px-3 py-1 text-sm border rounded-md ${
+                          currentPage === pageNum
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  })}
+                </div>
+                
+                <button
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 text-sm border rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
