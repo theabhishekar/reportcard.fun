@@ -19,6 +19,8 @@ export type CertificateData = {
 
 export type PersistedReport = CertificateData & { imageDataUrl?: string }
 
+import { useLanguage } from '@/lib/language-context'
+
 export const CertificateCanvas = forwardRef<
   HTMLCanvasElement,
   {
@@ -29,6 +31,7 @@ export const CertificateCanvas = forwardRef<
 >(({ data, onRendered, logoScale }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useImperativeHandle(ref, () => canvasRef.current!)
+  const { currentLanguage: t } = useLanguage()
 
   useEffect(() => {
     let revoked: string | null = null
@@ -103,11 +106,11 @@ export const CertificateCanvas = forwardRef<
 
         ctx.font = "bold 28px system-ui, -apple-system, Segoe UI, Roboto"
         const headerTextY1 = headerTop + Math.floor(headerH / 2) - 12
-        ctx.fillText("People of India", centerX, headerTextY1)
+        ctx.fillText(t.translations.title, centerX, headerTextY1)
 
         ctx.font = "600 20px system-ui, -apple-system, Segoe UI, Roboto"
         const headerTextY2 = headerTextY1 + 28
-        ctx.fillText("भारत के लोग", centerX, headerTextY2)
+        ctx.fillText(t.translations.subtitle, centerX, headerTextY2)
 
         // Restore left alignment for the rest of the canvas drawing
         ctx.textAlign = "left"
@@ -116,9 +119,9 @@ export const CertificateCanvas = forwardRef<
         // Title (shifted down by headerDelta)
         ctx.fillStyle = textColor
         ctx.font = "bold 30px system-ui, -apple-system, Segoe UI, Roboto"
-        ctx.fillText("Civic Issue Certificate", 40, 140 + headerDelta)
+        ctx.fillText(t.translations.title, 40, 140 + headerDelta)
         ctx.font = "600 22px system-ui, -apple-system, Segoe UI, Roboto"
-        ctx.fillText("नागरिक समस्या प्रमाणपत्र", 40, 170 + headerDelta)
+        ctx.fillText(t.translations.subtitle, 40, 170 + headerDelta)
 
         // Top right: multiple leader photos side by side
         const topLeaderW = 100
@@ -149,16 +152,16 @@ export const CertificateCanvas = forwardRef<
         ctx.font = "500 16px system-ui, -apple-system, Segoe UI, Roboto"
         const when = new Date(data.capturedAt).toLocaleString()
         const where = data.locationText
-        ctx.fillText(`Date & Time / दिनांक: ${when}`, 40, 210 + headerDelta)
-        ctx.fillText(`Location / स्थान: ${where}`, 40, 235 + headerDelta)
+        ctx.fillText(`${t.translations.dateTimeLabel}: ${when}`, 40, 210 + headerDelta)
+        ctx.fillText(`${t.translations.locationLabel}: ${where}`, 40, 235 + headerDelta)
 
         // Issue (shifted down by headerDelta)
         ctx.fillStyle = textColor
         ctx.font = "600 20px system-ui, -apple-system, Segoe UI, Roboto"
-        ctx.fillText(`Issue: ${data.issueType}`, 40, 270 + headerDelta)
+        ctx.fillText(`${t.translations.issueLabel}: ${data.issueType}`, 40, 270 + headerDelta)
         if (data.note) {
           ctx.font = "500 16px system-ui, -apple-system, Segoe UI, Roboto"
-          wrapText(ctx, `Note: ${data.note}`, 40, 298 + headerDelta, width - 80)
+          wrapText(ctx, `${t.translations.noteLabel}: ${data.note}`, 40, 298 + headerDelta, width - 80)
         }
 
         // Issue image (shifted down by headerDelta)
@@ -259,9 +262,11 @@ export const CertificateCanvas = forwardRef<
           ctx.font = "500 14px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.textAlign = "center"
           const centerX = qrX + qrSize/2
-          ctx.fillText("Scan to view report", centerX, qrY + qrSize + 24)
-          ctx.fillText("रिपोर्ट देखने हेतु स्कैन करें", centerX, qrY + qrSize + 46)
-          ctx.fillText(data.reportUrl, centerX, qrY + qrSize + 68)
+          const lines = t.translations.scanQrText.split("\n")
+          lines.forEach((line, i) => {
+            ctx.fillText(line, centerX, qrY + qrSize + 24 + (i * 22))
+          })
+          ctx.fillText(data.reportUrl, centerX, qrY + qrSize + 24 + (lines.length * 22))
           ctx.textAlign = "left" // Reset alignment
 
           // Demo disclaimer
@@ -289,8 +294,7 @@ export const CertificateCanvas = forwardRef<
           ctx.fillText(`Credit: ${data.footerCreditName}`, 40, footerY - 22)
           ctx.font = "500 13px system-ui, -apple-system, Segoe UI, Roboto"
         }
-        const footer = "This certificate documents a civic issue reported by a citizen."
-        ctx.fillText(footer, 40, footerY)
+        ctx.fillText(t.translations.footerText, 40, footerY)
 
         try {
           // Set quality to 1 and ensure background is preserved

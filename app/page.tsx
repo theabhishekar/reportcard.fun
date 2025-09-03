@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import { useLanguage } from "@/lib/language-context"
+import { LanguageSelector } from "@/components/language-selector"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { CertificateData } from "@/components/certificate-canvas"
@@ -50,6 +52,7 @@ export default function HomePage() {
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null) // data URL of canvas
   const [reportUrl, setReportUrl] = useState<string | null>(null) // app link used for QR / tweet
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { currentLanguage: t } = useLanguage()
 
   useEffect(() => {
     if (!issueImage) return
@@ -125,16 +128,19 @@ export default function HomePage() {
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
         <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-balance">Civic Issue Certificate</h1>
-          <a className="text-sm text-blue-600 hover:underline" href="/admin">
-            Admin
-          </a>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <a className="text-sm text-blue-600 hover:underline" href="/admin">
+              Admin
+            </a>
+          </div>
         </div>
       </header>
 
       <div className="mx-auto max-w-xl px-4 py-4 space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">1) Add Issue Photo</CardTitle>
+            <CardTitle className="text-base">1) {t.translations.uploadPhoto}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <ImageInput
@@ -163,11 +169,11 @@ export default function HomePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">2) Details</CardTitle>
+            <CardTitle className="text-base">2) {t.translations.selectIssueType}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="issue-type">Issue Type</Label>
+              <Label htmlFor="issue-type">{t.translations.issueLabel}</Label>
               <select
                 id="issue-type"
                 className={cn("border rounded px-3 py-2 text-sm")}
@@ -185,7 +191,7 @@ export default function HomePage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="note">Note (optional)</Label>
+              <Label htmlFor="note">{t.translations.noteLabel}</Label>
               <Input
                 id="note"
                 placeholder="Short description"
@@ -195,7 +201,7 @@ export default function HomePage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="location-text">Location (optional)</Label>
+              <Label htmlFor="location-text">{t.translations.locationLabel}</Label>
               <Input
                 id="location-text"
                 placeholder="e.g., MG Road, Bengaluru"
@@ -227,7 +233,7 @@ export default function HomePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">3) Leader Photos</CardTitle>
+            <CardTitle className="text-base">3) {t.translations.chooseLeaders}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
@@ -284,7 +290,7 @@ export default function HomePage() {
 
         <div className="flex gap-3">
           <Button className="bg-blue-600 hover:bg-blue-700" disabled={!canGenerate} onClick={handleGenerate}>
-            Generate Certificate
+            {t.translations.generateCertificate}
           </Button>
           <Button
             variant="outline"
@@ -312,7 +318,7 @@ export default function HomePage() {
           <>
             <Separator />
             <section className="space-y-3">
-              <h2 className="text-base font-semibold">Certificate Preview</h2>
+              <h2 className="text-base font-semibold">{t.translations.title}</h2>
               <CertificateCanvas ref={canvasRef} data={certData} onRendered={handleCanvasRendered} />
               <div className="flex flex-wrap gap-3">
                 <Button
