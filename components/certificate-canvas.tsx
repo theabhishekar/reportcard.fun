@@ -11,7 +11,8 @@ export type CertificateData = {
   coords?: { lat: number; lng: number }
   capturedAt: string // ISO
   issueImageFile: File
-  leaderImageUrl: string // data URL or public path
+  topLeaderImageUrls: string[] // array of leader images for top right
+  modiImageUrl: string // always present, bottom left
   reportUrl: string
   footerCreditName?: string // optional credit line in footer
 }
@@ -40,17 +41,22 @@ export const CertificateCanvas = forwardRef<
         const height = 1273
         canvas.width = width
         canvas.height = height
-        const ctx = canvas.getContext("2d")
+        
+        // Force non-transparent context
+        const ctx = canvas.getContext('2d', {
+          alpha: false,
+          willReadFrequently: true
+        })
         if (!ctx) return
+        
+        // Ensure white background
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fillRect(0, 0, width, height)
 
         const primary = "#2563EB"
         const textColor = "#111827"
         const subText = "#374151"
         const border = "#E5E7EB"
-
-        // Background
-        ctx.fillStyle = "#FFFFFF"
-        ctx.fillRect(0, 0, width, height)
 
         // Border
         ctx.strokeStyle = border
@@ -114,21 +120,28 @@ export const CertificateCanvas = forwardRef<
         ctx.font = "600 22px system-ui, -apple-system, Segoe UI, Roboto"
         ctx.fillText("नागरिक समस्या प्रमाणपत्र", 40, 170 + headerDelta)
 
-        // Leader photo (shifted down by headerDelta)
-        const leaderW = 120
-        const leaderH = 150
-        ctx.strokeStyle = border
-        ctx.lineWidth = 2
-        ctx.strokeRect(width - 40 - leaderW - 10, 110 + headerDelta, leaderW + 10, leaderH + 10)
-        try {
-          const leader = await loadImage(data.leaderImageUrl)
-          ctx.drawImage(leader, width - 40 - leaderW - 5, 115 + headerDelta, leaderW, leaderH)
-        } catch {
-          ctx.fillStyle = "#F3F4F6"
-          ctx.fillRect(width - 40 - leaderW - 5, 115 + headerDelta, leaderW, leaderH)
-          ctx.fillStyle = subText
-          ctx.font = "600 14px system-ui, -apple-system, Segoe UI, Roboto"
-          ctx.fillText("Leader", width - 40 - leaderW + 22, 195 + headerDelta)
+        // Top right: multiple leader photos side by side
+        const topLeaderW = 100
+        const topLeaderH = 120
+        const topLeaderGap = 16
+        const topStartX = width - 40 - (data.topLeaderImageUrls.length * (topLeaderW + topLeaderGap)) + topLeaderGap
+        const topY = 110 + headerDelta
+        for (let i = 0; i < data.topLeaderImageUrls.length; i++) {
+          const imgUrl = data.topLeaderImageUrls[i]
+          const x = topStartX + i * (topLeaderW + topLeaderGap)
+          ctx.strokeStyle = border
+          ctx.lineWidth = 2
+          ctx.strokeRect(x, topY, topLeaderW, topLeaderH)
+          try {
+            const leaderImg = await loadImage(imgUrl)
+            ctx.drawImage(leaderImg, x + 5, topY + 5, topLeaderW - 10, topLeaderH - 10)
+          } catch {
+            ctx.fillStyle = "#F3F4F6"
+            ctx.fillRect(x + 5, topY + 5, topLeaderW - 10, topLeaderH - 10)
+            ctx.fillStyle = subText
+            ctx.font = "600 14px system-ui, -apple-system, Segoe UI, Roboto"
+            ctx.fillText("Leader", x + 22, topY + 60)
+          }
         }
 
         // Meta (shifted down by headerDelta)
@@ -188,34 +201,83 @@ export const CertificateCanvas = forwardRef<
           ctx.stroke()
         }
 
-        // QR code (safe fallback)
+        // Bottom section layout constants
+        const bottomSectionY = height - 360 // Fixed Y position for bottom section
+        const bottomPadding = 40
+        const spaceBetween = 40 // Space between Modi photo and QR code
+        
+        // Modi photo at bottom left, 4x bigger
+        try {
+          const modiImg = await loadImage(data.modiImageUrl)
+          const modiW = 280 // Increased width
+          const modiH = 320 // Increased height
+          const modiX = bottomPadding
+          const modiY = bottomSectionY
+          
+          // Draw border
+          ctx.save()
+          ctx.strokeStyle = border
+          ctx.lineWidth = 4
+          ctx.strokeRect(modiX, modiY, modiW, modiH)
+          
+          // Draw image with padding
+          ctx.drawImage(modiImg, modiX + 8, modiY + 8, modiW - 16, modiH - 16)
+          ctx.restore()
+        } catch {
+          const modiW = 280
+          const modiH = 320
+          const modiX = bottomPadding
+          const modiY = bottomSectionY
+          
+          ctx.fillStyle = "#F3F4F6"
+          ctx.fillRect(modiX, modiY, modiW, modiH)
+          ctx.fillStyle = subText
+          ctx.font = "600 18px system-ui, -apple-system, Segoe UI, Roboto"
+          ctx.fillText("PM Modi", modiX + 80, modiY + 160)
+        }
+
+        // QR code at bottom right
         try {
           const qrDataUrl = await QRCode.toDataURL(data.reportUrl, { margin: 0, scale: 6 })
           const qrImg = await loadImage(qrDataUrl)
-          const qrSize = 140
-          const qrX = 40
-          const qrY = height - 40 - qrSize - 80
+          const qrSize = 160 // Slightly larger QR
+          const qrX = width - bottomPadding - qrSize
+          const qrY = bottomSectionY
+          
+          // White background for QR
+          ctx.fillStyle = "#FFFFFF"
+          ctx.fillRect(qrX, qrY, qrSize, qrSize)
+          
+          // Draw QR with border
+          ctx.strokeStyle = border
+          ctx.lineWidth = 2
+          ctx.strokeRect(qrX, qrY, qrSize, qrSize)
           ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize)
+          
+          // QR text - centered below QR code
           ctx.fillStyle = subText
           ctx.font = "500 14px system-ui, -apple-system, Segoe UI, Roboto"
-          ctx.fillText("Scan to view report", qrX + qrSize + 16, qrY + 24)
-          ctx.fillText("रिपोर्ट देखने हेतु स्कैन करें", qrX + qrSize + 16, qrY + 46)
-          ctx.fillText(data.reportUrl, qrX + qrSize + 16, qrY + 68)
+          ctx.textAlign = "center"
+          const centerX = qrX + qrSize/2
+          ctx.fillText("Scan to view report", centerX, qrY + qrSize + 24)
+          ctx.fillText("रिपोर्ट देखने हेतु स्कैन करें", centerX, qrY + qrSize + 46)
+          ctx.fillText(data.reportUrl, centerX, qrY + qrSize + 68)
+          ctx.textAlign = "left" // Reset alignment
 
-          // Add demo disclaimer next to QR
+          // Demo disclaimer
           ctx.font = "500 11px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.fillText("Demo only — QR/URL not live", qrX, qrY + qrSize + 16)
         } catch {
-          const qrX = 40
-          const qrY = height - 40 - 140 - 80
+          const qrSize = 160
+          const qrX = width - bottomPadding - qrSize
+          const qrY = bottomSectionY
           ctx.fillStyle = subText
           ctx.font = "500 14px system-ui, -apple-system, Segoe UI, Roboto"
-          ctx.fillText("Link:", qrX, qrY + 24)
-          wrapText(ctx, data.reportUrl, qrX + 45, qrY + 24, 500)
+          ctx.fillText("Link:", qrX - 180, qrY + 40)
+          wrapText(ctx, data.reportUrl, qrX - 180, qrY + 70, 400)
 
-          // Add demo disclaimer when QR fails
           ctx.font = "500 11px system-ui, -apple-system, Segoe UI, Roboto"
-          ctx.fillText("Demo only — QR/URL not live", qrX, qrY + 140 + 16)
+          ctx.fillText("Demo only — QR/URL not live", qrX, qrY + qrSize + 16)
         }
 
         // Footer
@@ -231,7 +293,8 @@ export const CertificateCanvas = forwardRef<
         ctx.fillText(footer, 40, footerY)
 
         try {
-          onRendered?.(canvas.toDataURL("image/png"))
+          // Set quality to 1 and ensure background is preserved
+          onRendered?.(canvas.toDataURL("image/png", { quality: 1 }))
         } catch {
           onRendered?.(null)
         }
@@ -246,7 +309,16 @@ export const CertificateCanvas = forwardRef<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(data), logoScale])
 
-  return <canvas ref={canvasRef} className="w-full h-auto rounded border" aria-label="Generated certificate" />
+  return (
+    <div style={{ backgroundColor: "white" }}>
+      <canvas 
+        ref={canvasRef}
+        className="w-full h-auto rounded border"
+        aria-label="Generated certificate"
+        style={{ backgroundColor: "white" }}
+      />
+    </div>
+  )
 })
 
 async function loadImage(src: string): Promise<HTMLImageElement> {
@@ -257,6 +329,29 @@ async function loadImage(src: string): Promise<HTMLImageElement> {
     img.onerror = (e) => reject(e)
     img.src = src
   })
+}
+
+// Convert canvas to PNG with white background
+function canvasToPng(canvas: HTMLCanvasElement): string {
+  const { width, height } = canvas
+  
+  // Create a new canvas with white background
+  const whiteCanvas = document.createElement('canvas')
+  whiteCanvas.width = width
+  whiteCanvas.height = height
+  
+  const whiteCtx = whiteCanvas.getContext('2d', { alpha: false })
+  if (!whiteCtx) return canvas.toDataURL()
+  
+  // Fill with white
+  whiteCtx.fillStyle = '#FFFFFF'
+  whiteCtx.fillRect(0, 0, width, height)
+  
+  // Draw original canvas on top
+  whiteCtx.drawImage(canvas, 0, 0)
+  
+  // Convert to PNG
+  return whiteCanvas.toDataURL('image/png')
 }
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number) {

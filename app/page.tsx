@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import type { CertificateData } from "@/components/certificate-canvas"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -10,11 +11,23 @@ import { cn } from "@/lib/utils"
 import { LeaderPhotoInput } from "@/components/leader-photo-input"
 import { ImageInput } from "@/components/image-input"
 import { getLocationFromImageOrDevice } from "@/lib/location"
-import { CertificateCanvas, type CertificateData } from "@/components/certificate-canvas"
+import { CertificateCanvas } from "@/components/certificate-canvas"
 import { saveReport } from "@/lib/storage"
-import { TweetButton } from "@/components/tweet-button"
+import { SocialShare } from "@/components/social-share"
 
 type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Other"
+
+type LeaderOption = {
+  key: string
+  label: string
+  imageUrl: string
+}
+
+const LEADER_OPTIONS: LeaderOption[] = [
+  { key: "modi", label: "PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
+  { key: "gadkari", label: "Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
+  { key: "cm", label: "State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
+]
 
 export default function HomePage() {
   const [issueImage, setIssueImage] = useState<File | null>(null)
@@ -27,7 +40,12 @@ export default function HomePage() {
   const [locText, setLocText] = useState<string>("")
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null })
   const [dateTime, setDateTime] = useState<Date | null>(null)
+    const [localDateTime, setLocalDateTime] = useState<string>("")
   const [isLocLoading, setIsLocLoading] = useState(false)
+    // For top right leaders
+    const [selectedLeaders, setSelectedLeaders] = useState<string[]>(["modi"])
+    // For CM custom image
+    const [cmImage, setCmImage] = useState<string>("/images/leader-default.png")
   const [certData, setCertData] = useState<CertificateData | null>(null)
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null) // data URL of canvas
   const [reportUrl, setReportUrl] = useState<string | null>(null) // app link used for QR / tweet
@@ -45,18 +63,36 @@ export default function HomePage() {
     })()
   }, [issueImage])
 
+    // Fix hydration error: set local date/time only on client
+    useEffect(() => {
+      setLocalDateTime((dateTime ?? new Date()).toLocaleString())
+    }, [dateTime])
+
   const canGenerate = useMemo(() => {
     return Boolean(issueImage && leaderPreview)
   }, [issueImage, leaderPreview, locText, coords])
 
   const handleGenerate = async () => {
-    if (!issueImage) return
-    const id = crypto.randomUUID()
-    const url = `${window.location.origin}/report/${id}`
+    if (!issueImage) return;
+    const id = crypto.randomUUID();
+    const url = `/report/${id}` // Just the path, domain handled in SocialShare;
 
-    const data: CertificateData = {
-      id,
-      issueType,
+    // Build top leaders array
+    const topLeaders: string[] = selectedLeaders
+      .filter((key) => key !== "modi") // exclude Modi from top, always at bottom
+      .map((key) => {
+        if (key === "cm") return cmImage;
+        const found = LEADER_OPTIONS.find((opt) => opt.key === key);
+        return found ? found.imageUrl : "";
+      })
+      .filter(Boolean);
+
+    // Always include Modi at bottom left
+    const modiImage = LEADER_OPTIONS.find((opt) => opt.key === "modi")?.imageUrl || "/images/pm-modi.png";
+
+    const data = {
+      id: id,
+      issueType: issueType,
       note: issueNote,
       locationText:
         (locText && locText.trim()) ||
@@ -64,12 +100,13 @@ export default function HomePage() {
       coords: coords.lat && coords.lng ? { lat: coords.lat, lng: coords.lng } : undefined,
       capturedAt: (dateTime ?? new Date()).toISOString(),
       issueImageFile: issueImage,
-      leaderImageUrl: leaderPreview || "/images/leader-default.png",
+      topLeaderImageUrls: topLeaders,
+      modiImageUrl: modiImage,
       reportUrl: url,
-      footerCreditName: creditName || undefined, //
-    }
-    setCertData(data)
-    setReportUrl(url)
+      footerCreditName: creditName || undefined,
+    };
+    setCertData(data);
+    setReportUrl(url);
   }
 
   // Capture the canvas image once drawn
@@ -172,7 +209,7 @@ export default function HomePage() {
 
             <div className="grid gap-2">
               <Label>Capture Time</Label>
-              <div className="text-sm">{(dateTime ?? new Date()).toLocaleString()}</div>
+                <div className="text-sm">{localDateTime}</div>
             </div>
 
             <div className="grid gap-2">
@@ -190,23 +227,58 @@ export default function HomePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">3) Leader Photo</CardTitle>
+            <CardTitle className="text-base">3) Leader Photos</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <LeaderPhotoInput
-              defaultUrl="/images/leader-default.png"
-              onChange={(file, preview) => {
-                setLeaderImage(file)
-                setLeaderPreview(preview || "/images/leader-default.png")
-              }}
-            />
-            {leaderPreview && (
-              <img
-                src={leaderPreview || "/placeholder.svg"}
-                alt="Leader preview"
-                className="h-24 w-24 rounded object-cover border"
-              />
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <Label>Select Leaders (Top Right)</Label>
+              <div className="grid grid-cols-1 gap-2">
+                {LEADER_OPTIONS.map((opt) => (
+                  <label key={opt.key} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300"
+                      checked={selectedLeaders.includes(opt.key)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedLeaders((prev) => [...prev, opt.key]);
+                        } else if (opt.key !== "modi") { // Don't unselect Modi
+                          setSelectedLeaders((prev) => prev.filter((k) => k !== opt.key));
+                        }
+                      }}
+                    />
+                    <span className="text-sm">{opt.label}</span>
+                    <img 
+                      src={opt.imageUrl} 
+                      alt={opt.label}
+                      className="h-8 w-8 rounded-full object-cover border ml-2"
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {selectedLeaders.includes("cm") && (
+              <div className="space-y-2">
+                <Label className="text-sm">Select State/UT CM Photo</Label>
+                <LeaderPhotoInput
+                  defaultUrl="/images/leader-default.png"
+                  onChange={(_, preview) => setCmImage(preview || "/images/leader-default.png")}
+                />
+                {cmImage && (
+                  <img
+                    src={cmImage}
+                    alt="CM preview"
+                    className="h-24 w-24 rounded object-cover border"
+                  />
+                )}
+              </div>
             )}
+
+            <p className="text-xs text-gray-600">
+              Note: PM Modi's photo will always appear at the bottom left of the certificate (4x larger).
+              Select additional leaders to appear at the top right.
+            </p>
           </CardContent>
         </Card>
 
@@ -256,10 +328,11 @@ export default function HomePage() {
                 >
                   Download PNG
                 </Button>
-                {generatedUrl && reportUrl && (
-                  <TweetButton
+                {generatedUrl && reportUrl && certData && (
+                  <SocialShare
                     imageDataUrl={generatedUrl}
-                    text={`Together, we highlight India's challenges too. Location: ${certData.locationText}. #Accountability #CivicIssues`}
+                    issueType={certData.issueType}
+                    location={certData.locationText}
                     url={reportUrl}
                   />
                 )}
