@@ -30,6 +30,7 @@ const LEADER_OPTIONS: LeaderOption[] = [
   { key: "modi", label: "Hon' PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
   { key: "gadkari", label: "Hon' Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
   { key: "cm", label: "Hon' State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
+  { key: "custom", label: "Add Custom Leader/Officer", imageUrl: "/images/leader-default.png" },
 ]
 
 export default function HomePage() {
@@ -51,6 +52,9 @@ export default function HomePage() {
     // For CM custom image
     const [cmImage, setCmImage] = useState<string>("/images/leader-default.png")
   const [selectedCMName, setSelectedCMName] = useState<string>("")
+    // For custom leader/image (top-right custom entry)
+    const [customImage, setCustomImage] = useState<string>("/images/leader-default.png")
+    const [customName, setCustomName] = useState<string>("")
   const [certData, setCertData] = useState<CertificateData | null>(null)
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null) // data URL of canvas
   const [reportUrl, setReportUrl] = useState<string | null>(null) // app link used for QR / tweet
@@ -87,7 +91,8 @@ export default function HomePage() {
     const topLeaders = selectedLeaders
       .filter((key) => key !== "modi") // exclude Modi from top, always at bottom
       .map((key) => {
-        if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
+  if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
+  if (key === "custom") return { url: customImage, name: customName || "Hon' Selected Leader" };
         const found = LEADER_OPTIONS.find((opt) => opt.key === key);
         return found ? { url: found.imageUrl, name: found.label } : null;
       })
@@ -313,6 +318,29 @@ export default function HomePage() {
               Note: PM Modi's photo will always appear at the bottom left of the certificate (4x larger).
               Select additional leaders to appear at the top right.
             </p>
+
+            {selectedLeaders.includes("custom") && (
+              <div className="space-y-2">
+                <Label className="text-sm">Custom Leader / Officer</Label>
+                <LeaderPhotoInput
+                  defaultUrl="/images/leader-default.png"
+                  onChange={(file: File | null, preview: string | null, name?: string) => {
+                    setCustomImage(preview || "/images/leader-default.png");
+                    if (name) setCustomName(name);
+                  }}
+                />
+                {customImage && (
+                  <div className="space-y-1">
+                    <img
+                      src={customImage}
+                      alt="Custom leader preview"
+                      className="h-24 w-24 rounded object-cover border"
+                    />
+                    <div className="text-sm text-red-600 font-medium">Custom Leader / Officer</div>
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 

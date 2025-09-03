@@ -21,6 +21,9 @@ export default function CivicHomePage() {
   const [issuePreview, setIssuePreview] = useState<string | null>(null)
   const [leaderImage, setLeaderImage] = useState<File | null>(null)
   const [leaderPreview, setLeaderPreview] = useState<string | null>("/images/pm-modi.png")
+  // custom leader support
+  const [customLeaderImage, setCustomLeaderImage] = useState<string>("/images/leader-default.png")
+  const [customLeaderName, setCustomLeaderName] = useState<string>("")
   const [issueType, setIssueType] = useState<IssueType>("Pothole")
   const [issueNote, setIssueNote] = useState<string>("")
   const [creditName, setCreditName] = useState<string | "">("") // new optional field
@@ -200,9 +203,13 @@ export default function CivicHomePage() {
           <CardContent className="space-y-3">
             <LeaderPhotoInput
               defaultUrl="/images/pm-modi.png"
-              onChange={(file, preview) => {
+              onChange={(file, preview, name) => {
                 setLeaderImage(file)
                 setLeaderPreview(preview || "/images/pm-modi.png")
+                if (name) {
+                  setCustomLeaderImage(preview || "/images/leader-default.png")
+                  setCustomLeaderName(name)
+                }
               }}
             />
             {leaderPreview && (

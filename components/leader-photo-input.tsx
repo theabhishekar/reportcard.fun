@@ -60,6 +60,7 @@ export function LeaderPhotoInput({
             onChange={() => setChoice("pm")}
           />
           <span>Hon' PM Narendra Modi</span>
+          <img src="/images/pm-modi.png" alt="PM Modi" className="h-8 w-8 rounded-full object-cover" />
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -71,6 +72,7 @@ export function LeaderPhotoInput({
             onChange={() => setChoice("gadkari")}
           />
           <span>Hon' Nitin Gadkari</span>
+          <img src="/images/nitin-gadkari.jpg" alt="Nitin Gadkari" className="h-8 w-8 rounded-full object-cover" />
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -81,7 +83,8 @@ export function LeaderPhotoInput({
             checked={choice === "statecm"}
             onChange={() => setChoice("statecm")}
           />
-          <span>Hon' State/UT CM (choose region)</span>
+          <span>Hon' State/UT CM</span>
+          <img src="/images/leader-default.png" alt="State CM" className="h-8 w-8 rounded-full object-cover" />
         </label>
 
         <label className="inline-flex items-center gap-2">
@@ -92,18 +95,8 @@ export function LeaderPhotoInput({
             checked={choice === "custom"}
             onChange={() => setChoice("custom")}
           />
-          <span>Custom upload</span>
-        </label>
-
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="radio"
-            name="leader-choice"
-            value="url"
-            checked={choice === "url"}
-            onChange={() => setChoice("url")}
-          />
-          <span>Use URL</span>
+          <span>Add Custom Leader/Officer</span>
+          <img src="/images/leader-default.png" alt="Custom Leader" className="h-8 w-8 rounded-full object-cover" />
         </label>
       </div>
 
@@ -122,24 +115,60 @@ export function LeaderPhotoInput({
       {choice === "statecm" && (
         <StateCMPicker
           className="mt-1"
-          onSelect={(imgSrc: string, previewUrl: string | null, cmName?: string) => {
+          onSelect={(imageSrc: string, previewUrl?: string | null, name?: string) => {
             // Pass both image URL and CM name with Hon' prefix
-            onChange(null, imgSrc, cmName ? `Hon' ${cmName}` : undefined)
+            onChange(null, imageSrc, name ? `Hon' ${name}` : undefined)
           }}
         />
       )}
 
-      {/* Custom upload (enabled only when 'custom' is selected) */}
-      <input
-        type="file"
-        accept="image/*"
-        disabled={choice !== "custom"}
-        onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
-        className="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white hover:file:bg-blue-700 disabled:opacity-50"
-      />
+      {/* Custom upload section (enabled only when 'custom' is selected) */}
+      {choice === "custom" && (
+        <div className="flex flex-col gap-2">
+          <input
+            type="text"
+            placeholder="Enter leader/officer name"
+            className="block w-full rounded border px-3 py-2 text-sm"
+            onChange={(e) => {
+              // Update the name when file is already selected
+              const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+              const file = fileInput?.files?.[0];
+              if (file) {
+                handleFile(file);
+                onChange(file, null, `Hon' ${e.target.value}`);
+              }
+            }}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const nameInput = e.target.previousElementSibling as HTMLInputElement;
+                handleFile(file);
+                if (nameInput?.value) {
+                  onChange(file, null, `Hon' ${nameInput.value}`);
+                }
+              }
+            }}
+            className="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white hover:file:bg-blue-700"
+          />
+        </div>
+      )}
+
+      {/* Show file input for non-custom choices (disabled) */}
+      {choice !== "custom" && (
+        <input
+          type="file"
+          accept="image/*"
+          disabled
+          className="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white hover:file:bg-blue-700 disabled:opacity-50"
+        />
+      )}
 
       <p className="text-xs text-gray-600">
-        Choose a default, pick a State/UT CM, paste a URL, or switch to Custom to upload your own. Note: Some remote
+        Choose a default, pick a State/UT CM, paste a URL, or switch to Custom to upload your own photo and add leader/officer name. Note: Some remote
         URLs may block cross-origin loading; Wikipedia images usually work with canvas.
       </p>
     </div>
