@@ -41,17 +41,6 @@ function generateUUID(): string {
 
 type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Other"
 
-type LeaderOption = {
-  key: string
-  label: string
-  imageUrl: string
-}
-
-const LEADER_OPTIONS: LeaderOption[] = [
-  { key: "cm", label: "Hon' State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
-  { key: "custom", label: "Add Custom Leader/Officer", imageUrl: "/images/leader-default.png" },
-]
-
 export default function HomePage() {
   const [issueImage, setIssueImage] = useState<File | null>(null)
   const [issuePreview, setIssuePreview] = useState<string | null>(null)
@@ -122,8 +111,8 @@ export default function HomePage() {
       .map((key) => {
         if (key === "cm") return { url: cmImage, name: selectedCMName || "Hon' Selected State/UT CM" };
         if (key === "custom") return { url: customImage, name: customName || "Hon' Selected Leader" };
-        const found = LEADER_OPTIONS.find((opt) => opt.key === key);
-        return found ? { url: found.imageUrl, name: found.label } : null;
+        if (key === "gadkari") return { url: "/images/nitin-gadkari.jpg", name: "Hon' Nitin Gadkari" };
+        return null;
       })
       .filter((leader): leader is { url: string; name: string } => Boolean(leader));
 
@@ -360,65 +349,56 @@ export default function HomePage() {
                     />
                   </div>
                 </label>
-                {LEADER_OPTIONS.map((opt) => (
-                  <label key={opt.key} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300"
-                      checked={selectedLeaders.includes(opt.key)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedLeaders((prev) => [...prev, opt.key]);
-                        } else {
-                          setSelectedLeaders((prev) => prev.filter((k) => k !== opt.key));
-                        }
-                      }}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300"
+                    checked={selectedLeaders.includes("cm")}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedLeaders(prev => [...prev, "cm"]);
+                      } else {
+                        setSelectedLeaders(prev => prev.filter(k => k !== "cm"));
+                      }
+                    }}
+                  />
+                  <span className="text-sm">Hon' State/UT CM</span>
+                  <div className="flex flex-col items-center ml-2">
+                    <img 
+                      src="/images/leader-default.png" 
+                      alt="State/UT CM"
+                      className="h-8 w-8 rounded-full object-cover border"
                     />
-                    <span className="text-sm">{opt.label}</span>
-                    <div className="flex flex-col items-center ml-2">
-                      <img 
-                        src={opt.imageUrl} 
-                        alt={opt.label}
-                        className="h-8 w-8 rounded-full object-cover border"
-                      />
-                    </div>
-                  </label>
-                ))}
+                  </div>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300"
+                    checked={selectedLeaders.includes("custom")}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedLeaders(prev => [...prev, "custom"]);
+                      } else {
+                        setSelectedLeaders(prev => prev.filter(k => k !== "custom"));
+                      }
+                    }}
+                  />
+                  <span className="text-sm">Add Custom Leader/Officer</span>
+                  <div className="flex flex-col items-center ml-2">
+                    <img 
+                      src="/images/leader-default.png" 
+                      alt="Custom Leader"
+                      className="h-8 w-8 rounded-full object-cover border"
+                    />
+                  </div>
+                </label>
               </div>
             </div>
 
             {selectedLeaders.includes("cm") && (
               <div className="space-y-2">
-                <Label className="text-sm">Select State/UT CM Photo</Label>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="cmPhoto"
-                      className="h-4 w-4 rounded border-gray-300"
-                      checked={cmImage === "/images/leader-default.png"}
-                      onChange={() => setCmImage("/images/leader-default.png")}
-                    />
-                    <span className="text-sm">Use Default CM Photo</span>
-                    <div className="flex flex-col items-center ml-2">
-                      <img 
-                        src="/images/leader-default.png" 
-                        alt="Default CM"
-                        className="h-8 w-8 rounded-full object-cover border"
-                      />
-                    </div>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="cmPhoto"
-                      className="h-4 w-4 rounded border-gray-300"
-                      checked={cmImage !== "/images/leader-default.png"}
-                      onChange={() => {}} // This will be handled by the file input
-                    />
-                    <span className="text-sm">Upload Custom CM Photo</span>
-                  </label>
-                </div>
+                <Label className="text-sm">Upload State/UT CM Photo</Label>
                 <LeaderPhotoInput
                   defaultUrl="/images/leader-default.png"
                   onChange={(_: File | null, preview: string | null, name?: string) => {
