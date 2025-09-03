@@ -79,6 +79,8 @@ export default function HomePage() {
   const [customName, setCustomName] = useState<string>("")
   // Control whether to include Modi photo
   const [includeModiPhoto, setIncludeModiPhoto] = useState<boolean>(true) // Default to true
+  // Track if user has manually set a time
+  const [userSetTime, setUserSetTime] = useState<boolean>(false)
   const [certData, setCertData] = useState<CertificateData | null>(null)
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null) // data URL of canvas
   const [reportUrl, setReportUrl] = useState<string | null>(null) // app link used for QR / tweet
@@ -96,11 +98,12 @@ export default function HomePage() {
       setIsLocLoading(true)
       const meta = await getLocationFromImageOrDevice(issueImage)
       if (meta?.coords) setCoords(meta.coords)
-      if (meta?.date) setDateTime(meta.date)
+      // Only set date from image if user hasn't manually set one
+      if (meta?.date && !userSetTime) setDateTime(meta.date)
       if (meta?.pretty) setLocText(meta.pretty)
       setIsLocLoading(false)
     })()
-  }, [issueImage])
+  }, [issueImage, userSetTime])
 
   // Fix hydration error: set local date/time only on client
   useEffect(() => {
@@ -303,12 +306,16 @@ export default function HomePage() {
                         const newDateTime = new Date(e.target.value)
                         setDateTime(newDateTime)
                         setLocalDateTime(newDateTime.toLocaleString())
+                        setUserSetTime(true) // Mark that user has set the time
                       }
                     }}
                     className="text-sm"
                   />
                   <div className="text-xs text-gray-600">
                     Current time: <span suppressHydrationWarning>{localDateTime}</span>
+                    {userSetTime && (
+                      <span className="ml-2 text-blue-600 font-medium">(User set)</span>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -470,6 +477,7 @@ export default function HomePage() {
               setCustomImage("/images/leader-default.png") // reset custom image
               setCustomName("") // reset custom name
               setIncludeModiPhoto(true) // reset to default (enabled)
+              setUserSetTime(false) // reset user time flag
               setCertData(null)
               setGeneratedUrl(null)
               setReportUrl(null)
