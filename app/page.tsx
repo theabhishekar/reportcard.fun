@@ -127,13 +127,10 @@ export default function HomePage() {
       })
       .filter((leader): leader is { url: string; name: string } => Boolean(leader));
 
-    // Include Modi at bottom left if selected, otherwise check for Gadkari
-    let modiImage = "/images/leader-default.png";
-    if (includeModiPhoto) {
-      modiImage = "/images/pm-modi.png";
-    } else if (selectedLeaders.includes("gadkari")) {
-      modiImage = "/images/nitin-gadkari.jpg";
-    }
+    // Include Modi at bottom left if selected
+    const modiImage = includeModiPhoto 
+      ? "/images/pm-modi.png"
+      : "/images/leader-default.png"; // Use placeholder if Modi photo is disabled
 
     const data = {
       id: id,
@@ -323,13 +320,7 @@ export default function HomePage() {
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-300"
                     checked={includeModiPhoto}
-                    onChange={(e) => {
-                      setIncludeModiPhoto(e.target.checked);
-                      if (e.target.checked) {
-                        // Uncheck Gadkari if Modi is selected
-                        setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
-                      }
-                    }}
+                    onChange={(e) => setIncludeModiPhoto(e.target.checked)}
                   />
                   <span className="text-sm">Hon' PM Narendra Modi</span>
                   <div className="flex flex-col items-center ml-2">
@@ -340,6 +331,13 @@ export default function HomePage() {
                     />
                   </div>
                 </label>
+              </div>
+            </div>
+
+            {/* Additional Leaders Selection */}
+            <div className="space-y-3">
+              <Label>Select Additional Leaders (Top Right)</Label>
+              <div className="grid grid-cols-1 gap-2">
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -348,7 +346,6 @@ export default function HomePage() {
                     onChange={(e) => {
                       if (e.target.checked) {
                         setSelectedLeaders(prev => [...prev, "gadkari"]);
-                        setIncludeModiPhoto(false); // Uncheck Modi if Gadkari is selected
                       } else {
                         setSelectedLeaders(prev => prev.filter(k => k !== "gadkari"));
                       }
@@ -363,13 +360,6 @@ export default function HomePage() {
                     />
                   </div>
                 </label>
-              </div>
-            </div>
-
-            {/* Additional Leaders Selection */}
-            <div className="space-y-3">
-              <Label>Select Additional Leaders (Top Right)</Label>
-              <div className="grid grid-cols-1 gap-2">
                 {LEADER_OPTIONS.map((opt) => (
                   <label key={opt.key} className="flex items-center gap-2">
                     <input
