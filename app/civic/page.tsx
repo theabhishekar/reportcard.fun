@@ -36,6 +36,12 @@ export default function CivicHomePage() {
   const [reportUrl, setReportUrl] = useState<string | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  },[])
+
   useEffect(() => {
     if (!issueImage) return
     ;(async () => {
@@ -180,7 +186,9 @@ export default function CivicHomePage() {
 
             <div className="grid gap-2">
               <Label>Capture Time</Label>
-              <div className="text-sm">{(dateTime ?? new Date()).toLocaleString()}</div>
+              <div className="text-sm">
+                { mounted ? (dateTime ?? new Date()).toLocaleString(): 'Loading...'}
+                </div>
             </div>
 
             <div className="grid gap-2">
