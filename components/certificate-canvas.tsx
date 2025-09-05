@@ -306,28 +306,45 @@ export const CertificateCanvas = forwardRef<
         // Bottom section layout constants
         const bottomSectionY = height - 360 // Fixed Y position for bottom section
         const bottomPadding = 40
-        const spaceBetween = 40 // Space between Modi photo and QR code
+        const spaceBetween = 40 // Space between left photo and QR code
+
+        // Pre-compute QR position so we know the available width for the photo
+        const qrSize = 160
+        const qrX = width - bottomPadding - qrSize
+        const qrY = bottomSectionY
         
-        // Modi photo at bottom left, 4x bigger (only if not default placeholder)
+        // Modi photo at bottom left, stretched to available width (inside border)
         if (data.modiImageUrl && !data.modiImageUrl.includes("leader-default.png")) {
           try {
             const modiImg = await loadImage(data.modiImageUrl)
-            const modiW = 280 // Increased width
-            const modiH = 320 // Increased height
             const modiX = bottomPadding
             const modiY = bottomSectionY
+            const maxW = Math.max(200, qrX - spaceBetween - bottomPadding) // available width inside border
+            // Target width: min(available width, natural width)
+            const targetW = Math.min(maxW, (modiImg as HTMLImageElement).width || maxW)
+            // Keep aspect ratio for height so image isn't vertically distorted
+            const naturalW = (modiImg as HTMLImageElement).width || targetW
+            const naturalH = (modiImg as HTMLImageElement).height || targetW
+            const aspect = naturalW > 0 ? naturalW / naturalH : 0.75
+            const targetH = Math.min(320, Math.round(targetW / Math.max(aspect, 0.1)))
             
             // Draw border
             ctx.save()
             ctx.strokeStyle = border
             ctx.lineWidth = 4
-            ctx.strokeRect(modiX, modiY, modiW, modiH)
+            ctx.strokeRect(modiX, modiY, targetW, targetH)
             
             // Draw image with padding
-            ctx.drawImage(modiImg, modiX + 8, modiY + 8, modiW - 16, modiH - 16)
+            ctx.drawImage(modiImg, modiX + 8, modiY + 8, targetW - 16, targetH - 16)
             ctx.restore()
+
+            // Tagline near Modi photo (keep above footer and avoid overlap)
+            const safeTaglineY = Math.min(height - 80, modiY + targetH + 22)
+            ctx.fillStyle = "#1F2937" // gray-800
+            ctx.font = "italic 600 16px system-ui, -apple-system, Segoe UI, Roboto"
+            ctx.fillText("Reporting to build the India our PM envisions", modiX, safeTaglineY)
           } catch {
-            const modiW = 280
+            const modiW = Math.max(200, qrX - spaceBetween - bottomPadding)
             const modiH = 320
             const modiX = bottomPadding
             const modiY = bottomSectionY
@@ -346,9 +363,6 @@ export const CertificateCanvas = forwardRef<
           const qrUrl = data.locationMapUrl || data.reportUrl
           const qrDataUrl = await QRCode.toDataURL(qrUrl, { margin: 0, scale: 6 })
           const qrImg = await loadImage(qrDataUrl)
-          const qrSize = 160 // Slightly larger QR
-          const qrX = width - bottomPadding - qrSize
-          const qrY = bottomSectionY
           
           // White background for QR
           ctx.fillStyle = "#FFFFFF"
@@ -382,9 +396,7 @@ export const CertificateCanvas = forwardRef<
           ctx.font = "500 11px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.fillText("Demo only — QR/URL not live", qrX, qrY + qrSize + 16)
         } catch {
-          const qrSize = 160
-          const qrX = width - bottomPadding - qrSize
-          const qrY = bottomSectionY
+          // positions precomputed above
           ctx.fillStyle = subText
           ctx.font = "500 14px system-ui, -apple-system, Segoe UI, Roboto"
           ctx.fillText("Link:", qrX - 180, qrY + 40)

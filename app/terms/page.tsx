@@ -109,7 +109,7 @@ export default function TermsPage() {
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-900">
-                  <strong>Email:</strong> legal@reportcard.fun<br/>
+                  
                   <strong>Response Time:</strong> 24-48 hours<br/>
                   <strong>GitHub Issues:</strong> <a href="https://github.com/ScienceArtist/reportcard.fun/issues" className="text-blue-600 hover:underline">Report Technical Issues</a>
                 </p>

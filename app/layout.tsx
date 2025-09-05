@@ -28,25 +28,21 @@ export default function RootLayout({
   return (
        <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <MobileNavigation />
-        
-        {/* Professional Government Appeal Banner */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 border-b border-green-200">
-          <div className="mx-auto max-w-7xl px-4 py-3">
-            <div className="text-center">
-              <p className="text-sm text-green-800 font-medium">
-                🇮🇳 <strong>Respectful Note to Hon'ble Officials:</strong> This is a simple spare time project by a citizen to help report civic issues constructively. 
-                Created with good intentions to support community improvement through proper RTI channels. 
-                <span className="text-green-900">🙏 Humbly seeking your understanding and guidance.</span>
+        <LanguageProvider>
+          <MobileNavigation />
+          
+          {/* Slim respectful note banner (single, non-distracting) */}
+          <div className="border-b border-green-200 bg-green-50/70">
+            <div className="mx-auto max-w-7xl px-4 py-2">
+              <p className="text-xs text-green-800 text-center">
+                🇮🇳 Respectful note to officials: citizen-run project to report civic issues via RTI in good faith. <a href="/terms" className="underline">Learn more</a>
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Live News Marquee - Global */}
-        <LiveNewsMarquee />
-        
-        <LanguageProvider>
+          {/* Live News Marquee - Global */}
+          <LiveNewsMarquee />
+          
           {children}
         </LanguageProvider>
         <Analytics />

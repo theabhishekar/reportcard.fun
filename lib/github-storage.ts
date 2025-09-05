@@ -214,15 +214,22 @@ export class GitHubStorageService {
    */
   async getGitHubIssues(): Promise<any[]> {
     try {
-      const response = await fetch(
-        `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues?state=all&per_page=100`
-      )
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch issues: ${response.status}`)
+      // Fetch all issues across pages (GitHub paginates at 100)
+      const all: any[] = []
+      let page = 1
+      while (true) {
+        const res = await fetch(
+          `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/issues?state=all&per_page=100&page=${page}`
+        )
+        if (!res.ok) throw new Error(`Failed to fetch issues: ${res.status}`)
+        const batch = await res.json()
+        all.push(...batch)
+        // Stop when fewer than 100 returned
+        if (!Array.isArray(batch) || batch.length < 100) break
+        page += 1
+        if (page > 10) break // hard safety cap
       }
-      
-      return await response.json()
+      return all
     } catch (error) {
       console.error('Error fetching GitHub issues:', error)
       return []

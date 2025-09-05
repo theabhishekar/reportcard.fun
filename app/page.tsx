@@ -10,7 +10,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useLanguage } from "@/lib/language-context"
-import { LanguageSelector } from "@/components/language-selector"
+// Header navigation and language/counters are rendered globally in app/navigation.tsx
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { CertificateData } from "@/components/certificate-canvas"
@@ -27,6 +27,7 @@ import { SocialShare } from "@/components/social-share"
 import { EmailRTIOptions } from "@/components/email-rti-options"
 import { AnalyticsDashboard } from "@/components/analytics-dashboard"
 import { githubStorage } from "@/lib/github-storage"
+import { HeaderCounters } from "@/components/header-counters"
 
 // Utility function to generate UUID that works in all browsers
 function generateUUID(): string {
@@ -41,7 +42,7 @@ function generateUUID(): string {
   });
 }
 
-type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Other"
+type IssueType = "Pothole" | "Garbage" | "Broken Streetlight" | "Illegal Dumping" | "Waterlogging" | "Bad Infrastructure" | "Infrastructure/Design" | "Other"
 
 type LeaderOption = {
   key: string
@@ -50,7 +51,7 @@ type LeaderOption = {
 }
 
 const LEADER_OPTIONS: LeaderOption[] = [
-  { key: "modi", label: "Hon' PM Narendra Modi", imageUrl: "/images/pm-modi.png" },
+  { key: "modi", label: "Hon' PM Narendra Modi", imageUrl: "https://pbs.twimg.com/media/Gz6Wnu1XsAANe07?format=jpg&name=large" },
   { key: "gadkari", label: "Hon' Nitin Gadkari", imageUrl: "/images/nitin-gadkari.jpg" },
   { key: "cm", label: "Hon' State/UT CM", imageUrl: "/images/leader-default.png" }, // can be replaced with actual CM image
   { key: "custom", label: "Add Custom Leader/Officer", imageUrl: "/images/leader-default.png" },
@@ -241,36 +242,13 @@ export default function HomePage() {
 
 
 
-      <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
-        <div className="mx-auto max-w-xl px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-balance">Civic Issue Reporter</h1>
-          <div className="flex items-center gap-4">
-            <LanguageSelector />
-            <a className="text-sm text-blue-600 hover:underline" href="/analytics">
-              Analytics
-            </a>
-          </div>
-        </div>
-      </header>
+      {/* Global header is used; local header removed to avoid duplication */}
 
-      {/* Legal Disclaimer */}
-      <div className="mx-auto max-w-xl px-4 pt-4">
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-yellow-800">
-                <strong>Important:</strong> This platform is for reporting civic infrastructure issues only (potholes, garbage, streetlights, etc.). 
-                Do not make personal accusations or unsubstantiated claims. 
-                <a href="/terms" className="underline hover:text-yellow-900">Read full terms</a>
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* Minimal inline disclaimer (compact, non-blocking) */}
+      <div className="mx-auto max-w-xl px-4 pt-3">
+        <p className="text-xs text-gray-500 text-center">
+          Use for civic infrastructure only. Be responsible. <a href="/terms" className="underline">Terms</a>
+        </p>
       </div>
 
       <div className="mx-auto max-w-xl px-4 py-4 space-y-6">
@@ -321,6 +299,8 @@ export default function HomePage() {
                 <option>Broken Streetlight</option>
                 <option>Illegal Dumping</option>
                 <option>Waterlogging</option>
+                <option>Bad Infrastructure</option>
+                <option>Infrastructure/Design</option>
                 <option>Other</option>
               </select>
               <p className="text-xs text-gray-600">Auto-tagging coming soon; choose a type for now.</p>
@@ -615,83 +595,20 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Buy Me a Coffee Section */}
-      <div className="mx-auto max-w-xl px-4 py-4 text-center">
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 border border-amber-200">
-          <h3 className="text-base font-semibold text-amber-800 mb-2">
-            ☕ Support This Project
-          </h3>
-          <p className="text-xs text-amber-700 mb-3">
-            If this tool helps you report civic issues, consider buying me a coffee to keep it running!
-          </p>
-          <a
-            href="https://buymeacoffee.com/mehonestperson?status=1"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
-          >
-            <span>☕</span>
-            <span>Buy Me a Coffee</span>
-          </a>
+      {/* Footer: tiny support & contribute links */}
+      <footer className="mt-8 text-center text-xs text-gray-500">
+        <div className="mx-auto max-w-xl px-4 py-3">
+          <span className="mr-2">☕</span>
+          <a href="https://buymeacoffee.com/mehonestperson?status=1" target="_blank" rel="noopener noreferrer" className="underline">Support</a>
+          <span className="mx-2">·</span>
+          <a href="https://github.com/ScienceArtist/reportcard.fun/issues" target="_blank" rel="noopener noreferrer" className="underline">Report Issue</a>
+          <span className="mx-2">·</span>
+          <a href="https://github.com/ScienceArtist/reportcard.fun" target="_blank" rel="noopener noreferrer" className="underline">Star on GitHub</a>
         </div>
-      </div>
-
-      {/* GitHub Contribution Section */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-          🤝 Contribute to the Project
-        </h3>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="https://github.com/ScienceArtist/reportcard.fun/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
-          >
-            🐛 Report Issue
-          </a>
-          <a
-            href="https://github.com/ScienceArtist/reportcard.fun"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-          >
-            ⭐ Star on GitHub
-          </a>
-        </div>
-      </div>
+      </footer>
 
 
-      {/* Community Insights Preview */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-lg border relative overflow-hidden">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 text-center">
-            📊 Community Insights
-          </h3>
-        </div>
-        
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-400 p-3 mb-4 rounded-r-lg">
-          <p className="text-sm text-green-800 font-medium text-center">
-            🚀 <strong>Brand New Feature:</strong> Real-time analytics dashboard! 
-            See community trends, issue hotspots, and impact statistics.
-          </p>
-        </div>
-        
-        <p className="text-sm text-gray-600 mb-4 text-center">
-          Your civic reports contribute to community analytics and help identify problem areas
-        </p>
-        <div className="text-center">
-          <a
-            href="/analytics"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-lg"
-          >
-            📈 View Analytics Dashboard
-          </a>
-          <p className="text-xs text-gray-500 mt-2">
-            Access detailed community insights and civic issue statistics
-          </p>
-        </div>
-      </div>
+      {/* Community Insights removed per request */}
 
       {/* Footer */}
       <footer className="mt-12 py-6 text-center text-gray-600 border-t">
