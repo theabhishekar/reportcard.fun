@@ -18,6 +18,7 @@ export function MobileNavigation() {
   const debtRef = useRef<HTMLDivElement | null>(null)
   const debtMobileRef = useRef<HTMLDivElement | null>(null)
   const taxRef = useRef<HTMLDivElement | null>(null)
+  const taxMobileRef = useRef<HTMLDivElement | null>(null)
 
   // Header counters derived from global time (deterministic, not session-based)
   useEffect(() => {
@@ -104,8 +105,9 @@ export function MobileNavigation() {
       }
       // tax
       if (isTaxOpen) {
-        const insideTax = taxRef.current && taxRef.current.contains(target)
-        if (!insideTax) setIsTaxOpen(false)
+        const insideDesktopTax = taxRef.current && taxRef.current.contains(target)
+        const insideMobileTax = taxMobileRef.current && taxMobileRef.current.contains(target)
+        if (!insideDesktopTax && !insideMobileTax) setIsTaxOpen(false)
       }
     }
     document.addEventListener('mousedown', onDocClick)
@@ -163,7 +165,7 @@ export function MobileNavigation() {
             </div>
           </div>
           
-          {/* Mobile counters - show only deaths and debt, stacked vertically */}
+          {/* Mobile counters - show deaths, debt, and tax stacked vertically */}
           <div className="md:hidden flex flex-col gap-1">
             {/* Mobile deaths chip */}
             <div ref={deathsMobileRef} className="relative">
@@ -240,6 +242,44 @@ export function MobileNavigation() {
                     </ul>
                     <div className="mt-2 text-[11px] text-gray-600">
                       Based on recent budget/NSSO aggregates. Figures are directional and auto-updating for awareness.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile tax chip */}
+            <div ref={taxMobileRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setIsTaxOpen((v) => !v)}
+                className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded border border-gray-200 shadow-sm hover:bg-gray-100"
+                aria-haspopup="dialog"
+                aria-expanded={isTaxOpen}
+                aria-label="Tax collection info"
+              >
+                <span className="text-gray-600">₹</span>
+                <span className="text-gray-800">Tax:</span>
+                <span className="text-black font-semibold">{taxCroreCount !== null ? `₹${taxCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
+              </button>
+              <div className="text-[10px] text-gray-500 text-center mt-0.5">since Apr 1, 2024</div>
+
+              {isTaxOpen && (
+                <div
+                  role="dialog"
+                  aria-label="Tax collection information"
+                  className="absolute right-0 top-full mt-2 w-[92vw] max-w-sm rounded-lg border border-blue-200 bg-white shadow-xl p-3 z-50"
+                >
+                  <div className="text-xs leading-relaxed text-gray-800">
+                    <div className="font-semibold text-blue-700 mb-1">Tax collection keeps growing</div>
+                    <ul className="list-disc ml-4 space-y-1">
+                      <li><span className="font-medium">~₹30 lakh crore/yr collected</span> — across all taxes (GST, income, corporate, etc.).</li>
+                      <li><span className="font-medium">GST dominates</span> — largest single source of government revenue.</li>
+                      <li><span className="font-medium">Why it grows</span> — economic growth, better compliance, digital systems.</li>
+                      <li><span className="font-medium">What it funds</span> — infrastructure, defense, subsidies, social programs.</li>
+                    </ul>
+                    <div className="mt-2 text-[11px] text-gray-600">
+                      Based on recent budget data. Figures are directional and auto-updating for awareness.
                     </div>
                   </div>
                 </div>
