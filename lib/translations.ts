@@ -201,5 +201,77 @@ export const languages: Language[] = [
       generateCertificate: 'प्रमाणपत्र बनावीं',
       shareOnline: 'ऑनलाइन साझा करीं'
     }
+  },
+  {
+    code: 'pa',
+    name: 'Punjabi',
+    nativeName: 'ਪੰਜਾਬੀ',
+    translations: {
+      title: 'ਨਾਗਰਿਕ ਸਮੱਸਿਆ ਸਰਟੀਫਿਕੇਟ',
+      subtitle: 'ਲੋਕਾਂ ਦੀ ਆਵਾਜ਼',
+      dateTimeLabel: 'ਤਾਰੀਖ ਅਤੇ ਸਮਾਂ',
+      locationLabel: 'ਟਿਕਾਣਾ',
+      issueLabel: 'ਸਮੱਸਿਆ',
+      noteLabel: 'ਨੋਟ',
+      footerText: 'ਇਹ ਸਰਟੀਫਿਕੇਟ ਇੱਕ ਨਾਗਰਿਕ ਦੁਆਰਾ ਰਿਪੋਰਟ ਕੀਤੀ ਗਈ ਨਾਗਰਿਕ ਸਮੱਸਿਆ ਦਾ ਦਸਤਾਵੇਜ਼ ਹੈ।',
+      scanQrText: 'ਰਿਪੋਰਟ ਦੇਖਣ ਲਈ ਸਕੈਨ ਕਰੋ',
+      slogan: 'ਤੁਹਾਡੀ ਆਵਾਜ਼ ਮਹੱਤਵਪੂਰਨ ਹੈ',
+      impactText: 'ਬਿਹਤਰ ਸਮੁਦਾਇ ਲਈ ਮਿਲ ਕੇ',
+      selectIssueType: 'ਸਮੱਸਿਆ ਦਾ ਪ੍ਰਕਾਰ ਚੁਣੋ',
+      enterLocation: 'ਟਿਕਾਣਾ ਦਰਜ ਕਰੋ',
+      addNote: 'ਨੋਟ ਜੋੜੋ (ਵਿਕਲਪਿਕ)',
+      uploadPhoto: 'ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ',
+      chooseLeaders: 'ਨੇਤਾਵਾਂ ਨੂੰ ਚੁਣੋ',
+      generateCertificate: 'ਸਰਟੀਫਿਕੇਟ ਬਣਾਓ',
+      shareOnline: 'ਔਨਲਾਈਨ ਸਾਂਝਾ ਕਰੋ'
+    }
+  },
+  {
+    code: 'hr',
+    name: 'Haryanvi',
+    nativeName: 'हरियाणवी',
+    translations: {
+      title: 'नागरिक समस्या प्रमाणपत्र',
+      subtitle: 'जनता के आवाज',
+      dateTimeLabel: 'तारीख आर समय',
+      locationLabel: 'जगह',
+      issueLabel: 'समस्या',
+      noteLabel: 'नोट',
+      footerText: 'ये प्रमाणपत्र एक नागरिक द्वारा रिपोर्ट किए गए नागरिक समस्या का दस्तावेज है।',
+      scanQrText: 'रिपोर्ट देखने के लिए स्कैन करो',
+      slogan: 'तुम्हारी आवाज महत्वपूर्ण है',
+      impactText: 'बेहतर समुदाय के लिए मिल के',
+      selectIssueType: 'समस्या का प्रकार चुनो',
+      enterLocation: 'जगह भरो',
+      addNote: 'नोट जोड़ो (वैकल्पिक)',
+      uploadPhoto: 'फोटो अपलोड करो',
+      chooseLeaders: 'नेताओं को चुनो',
+      generateCertificate: 'प्रमाणपत्र बनाओ',
+      shareOnline: 'ऑनलाइन साझा करो'
+    }
+  },
+  {
+    code: 'cg',
+    name: 'Chhattisgarhi',
+    nativeName: 'छत्तीसगढ़ी',
+    translations: {
+      title: 'नागरिक समस्या प्रमाणपत्र',
+      subtitle: 'जनता के आवाज',
+      dateTimeLabel: 'तारीख आर समय',
+      locationLabel: 'जगह',
+      issueLabel: 'समस्या',
+      noteLabel: 'नोट',
+      footerText: 'ये प्रमाणपत्र एक नागरिक द्वारा रिपोर्ट किए गए नागरिक समस्या का दस्तावेज है।',
+      scanQrText: 'रिपोर्ट देखने के लिए स्कैन करो',
+      slogan: 'तुम्हारी आवाज महत्वपूर्ण है',
+      impactText: 'बेहतर समुदाय के लिए मिल के',
+      selectIssueType: 'समस्या का प्रकार चुनो',
+      enterLocation: 'जगह भरो',
+      addNote: 'नोट जोड़ो (वैकल्पिक)',
+      uploadPhoto: 'फोटो अपलोड करो',
+      chooseLeaders: 'नेताओं को चुनो',
+      generateCertificate: 'प्रमाणपत्र बनाओ',
+      shareOnline: 'ऑनलाइन साझा करो'
+    }
   }
 ]
