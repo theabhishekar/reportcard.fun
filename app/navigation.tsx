@@ -112,7 +112,7 @@ export function MobileNavigation() {
   return (
     <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
       <div className="mx-auto max-w-7xl px-4 py-3">
-        <nav className="relative grid grid-cols-3 items-center">
+        <nav className="relative grid grid-cols-4 items-center">
           <div className="flex items-center gap-6 col-start-1">
             <a
               href="/"
@@ -204,7 +204,7 @@ export function MobileNavigation() {
           </div>
 
           {/* Center counters in top bar */}
-          <div className="hidden md:flex items-center gap-4 text-xs col-start-2 justify-self-center">
+          <div className="hidden md:flex items-center gap-3 text-xs col-start-2 col-span-2 justify-self-center">
             {/* Deaths chip with popover */}
             <div ref={deathsRef} className="relative flex flex-col items-center">
               <button
@@ -293,7 +293,7 @@ export function MobileNavigation() {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-4 col-start-3 justify-self-end">
+          <div className="hidden md:flex items-center gap-4 col-start-4 justify-self-end">
             <LanguageSelector />
             <a
               href="/"
