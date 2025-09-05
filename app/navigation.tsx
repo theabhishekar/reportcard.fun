@@ -7,6 +7,9 @@ import { LanguageSelector } from '@/components/language-selector'
 export function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false)
   const { currentLanguage } = useLanguage()
+  const [deathsCount, setDeathsCount] = useState<number | null>(null)
+  const [debtCroreCount, setDebtCroreCount] = useState<number | null>(null)
+  const [taxCroreCount, setTaxCroreCount] = useState<number | null>(null)
   const [isDeathsOpen, setIsDeathsOpen] = useState(false)
   const [isDebtOpen, setIsDebtOpen] = useState(false)
   const deathsRef = useRef<HTMLDivElement | null>(null)
@@ -17,8 +20,10 @@ export function MobileNavigation() {
   // Header counters derived from global time (deterministic, not session-based)
   useEffect(() => {
     // Deaths: year-to-date based on an annual estimate
-    const DEATH_BASE_TIME = Date.UTC(2025, 0, 1, 0, 0, 0) // Jan 1, 2025 UTC
-    const DEATHS_PER_YEAR = 172000
+    // All-time style counter: count from a fixed historical epoch
+    const DEATH_BASE_TIME = Date.UTC(2000, 0, 1, 0, 0, 0) // Jan 1, 2000 UTC
+    const DEATHS_PER_YEAR = 172000 // India approx annual road deaths (recent years)
+    const DEATH_BASE_COUNT = 0 // baseline at epoch; adjust if you have a historical cumulative number
     const DEATHS_PER_SEC = DEATHS_PER_YEAR / (365 * 24 * 60 * 60)
 
     // Debt: baseline at a known time (in crores)
@@ -28,23 +33,24 @@ export function MobileNavigation() {
 
     const formatNum = (n: number) => n.toLocaleString('en-IN')
     const formatDebt = (n: number) => `₹${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr`
+    const DEATH_SINCE_LABEL = `since ${new Date(DEATH_BASE_TIME).getUTCFullYear()}`
+
+    // Tax counter for current financial year (India: Apr 1 → Mar 31)
+    const nowDate = new Date()
+    const fyStartYear = (nowDate.getUTCMonth() >= 3) ? nowDate.getUTCFullYear() : nowDate.getUTCFullYear() - 1
+    const TAX_BASE_TIME = Date.UTC(fyStartYear, 3, 1, 0, 0, 0) // Apr 1, FY start
+    const TAX_SINCE_LABEL = `since Apr 1, ${fyStartYear}`
+    const secondsInYear = 365 * 24 * 60 * 60
+    const TAX_PER_YEAR_CRORE = 3400000 // ~₹34 lakh crore across the FY (approx)
+    const TAX_PER_SEC_CRORE = TAX_PER_YEAR_CRORE / secondsInYear
 
     let lastShownDeaths = -1
     let lastBumpedAt = Date.now()
 
-    const render = (deathsValue: number, debtValue: number) => {
-      document.querySelectorAll<HTMLElement>('.hdr-deaths').forEach(el => {
-        el.textContent = formatNum(deathsValue)
-      })
-      document.querySelectorAll<HTMLElement>('.hdr-debt').forEach(el => {
-        el.textContent = formatDebt(debtValue)
-      })
-    }
-
     const update = () => {
       const now = Date.now()
       const deathElapsedSec = Math.max(0, Math.floor((now - DEATH_BASE_TIME) / 1000))
-      const ytdDeathsExact = DEATHS_PER_SEC * deathElapsedSec
+      const ytdDeathsExact = DEATH_BASE_COUNT + DEATHS_PER_SEC * deathElapsedSec
       let ytdDeaths = Math.floor(ytdDeathsExact)
 
       // Visibility tweak: ensure at least one visible increment every ~60s
@@ -69,8 +75,12 @@ export function MobileNavigation() {
 
       const debtElapsedSec = Math.max(0, (now - DEBT_BASE_TIME) / 1000)
       const liveDebtCrore = DEBT_BASE_CRORE + DEBT_PER_SEC_CRORE * debtElapsedSec
+      const taxElapsedSec = Math.max(0, (now - TAX_BASE_TIME) / 1000)
+      const liveTaxCrore = TAX_PER_SEC_CRORE * taxElapsedSec
 
-      render(ytdDeaths, liveDebtCrore)
+      setDeathsCount(ytdDeaths)
+      setDebtCroreCount(liveDebtCrore)
+      setTaxCroreCount(liveTaxCrore)
     }
 
     update()
@@ -102,8 +112,8 @@ export function MobileNavigation() {
   return (
     <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
       <div className="mx-auto max-w-7xl px-4 py-3">
-        <nav className="relative flex items-center justify-between">
-          <div className="flex items-center gap-6">
+        <nav className="relative grid grid-cols-3 items-center">
+          <div className="flex items-center gap-6 col-start-1">
             <a
               href="/"
               className="text-lg font-semibold text-gray-900 hover:text-gray-700 transition-colors"
@@ -112,20 +122,25 @@ export function MobileNavigation() {
               <span className="text-sm font-normal text-gray-600 ml-2 hidden sm:inline">(Civic Issue Reporter)</span>
             </a>
           </div>
-
+          
           {/* Mobile deaths chip centered in the top bar */}
-          <div ref={deathsMobileRef} className="md:hidden absolute left-1/2 -translate-x-1/2">
+          <div ref={deathsMobileRef} className="md:hidden col-start-2 justify-self-center">
             <button
               type="button"
               onClick={() => setIsDeathsOpen((v) => !v)}
-              className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded border border-gray-200 shadow-sm hover:bg-gray-100"
+              className="bg-gray-50 px-2 py-1 rounded border border-gray-200 shadow-sm hover:bg-gray-100"
               aria-haspopup="dialog"
               aria-expanded={isDeathsOpen}
               aria-label="Road deaths info"
             >
-              <span className="text-gray-600">🚨</span>
-              <span className="text-gray-800">Deaths:</span>
-              <span className="hdr-deaths text-black font-semibold">172,000</span>
+              <div className="flex flex-col leading-tight items-center">
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-600">🚨</span>
+                  <span className="text-gray-800">Deaths:</span>
+                  <span className="hdr-deaths text-black font-semibold">{deathsCount !== null ? deathsCount.toLocaleString('en-IN') : '—'}</span>
+                </div>
+                <div className="text-[10px] text-gray-500">since 2000</div>
+              </div>
             </button>
 
             {isDeathsOpen && (
@@ -151,7 +166,7 @@ export function MobileNavigation() {
             )}
           </div>
           {/* Mobile debt chip anchored right */}
-          <div ref={debtMobileRef} className="md:hidden absolute right-0">
+          <div ref={debtMobileRef} className="md:hidden col-start-3 justify-self-end">
             <button
               type="button"
               onClick={() => setIsDebtOpen((v) => !v)}
@@ -162,8 +177,9 @@ export function MobileNavigation() {
             >
               <span className="text-gray-600">💸</span>
               <span className="text-gray-800">Debt:</span>
-              <span className="hdr-debt text-black font-semibold">₹181,680,000.00 Cr</span>
+              <span className="hdr-debt text-black font-semibold">{debtCroreCount !== null ? `₹${debtCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
             </button>
+            <div className="text-[10px] text-gray-500 text-center mt-0.5">since Mar 31, 2024</div>
 
             {isDebtOpen && (
               <div
@@ -188,9 +204,9 @@ export function MobileNavigation() {
           </div>
 
           {/* Center counters in top bar */}
-          <div className="hidden md:flex items-center gap-3 text-xs">
+          <div className="hidden md:flex items-center gap-4 text-xs col-start-2 justify-self-center">
             {/* Deaths chip with popover */}
-            <div ref={deathsRef} className="relative">
+            <div ref={deathsRef} className="relative flex flex-col items-center">
               <button
                 type="button"
                 onClick={() => setIsDeathsOpen((v) => !v)}
@@ -201,8 +217,9 @@ export function MobileNavigation() {
               >
                 <span className="text-gray-600">🚨</span>
                 <span className="text-gray-800">Deaths:</span>
-                <span id="hdr-deaths" className="text-black font-semibold">172,000</span>
+                <span id="hdr-deaths" className="text-black font-semibold">{deathsCount !== null ? deathsCount.toLocaleString('en-IN') : '—'}</span>
               </button>
+              <div className="text-[10px] text-gray-500 mt-0.5">since 2000</div>
 
               {isDeathsOpen && (
                 <div
@@ -226,7 +243,8 @@ export function MobileNavigation() {
                 </div>
               )}
             </div>
-            <div ref={debtRef} className="relative">
+            
+            <div ref={debtRef} className="relative flex flex-col items-center">
               <button
                 type="button"
                 onClick={() => setIsDebtOpen((v) => !v)}
@@ -237,8 +255,10 @@ export function MobileNavigation() {
               >
                 <span className="text-gray-600">💸</span>
                 <span className="text-gray-800">Debt:</span>
-                <span className="hdr-debt text-black font-semibold">₹181,680,000.00 Cr</span>
+                <span className="hdr-debt text-black font-semibold">{debtCroreCount !== null ? `₹${debtCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
               </button>
+              <div className="text-[10px] text-gray-500 mt-0.5">since Mar 31, 2024</div>
+              
               {isDebtOpen && (
                 <div
                   role="dialog"
@@ -260,11 +280,20 @@ export function MobileNavigation() {
                 </div>
               )}
             </div>
+            
+            {/* Tax counter (desktop) */}
+            <div className="flex flex-col items-center text-xs">
+              <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded border border-gray-200">
+                <span className="text-gray-600">₹</span>
+                <span className="text-gray-800">Tax:</span>
+                <span className="text-black font-semibold">{taxCroreCount !== null ? `₹${taxCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
+              </div>
+              <div className="text-[10px] text-gray-500 mt-0.5">since Apr 1 (FY)</div>
+            </div>
           </div>
           
-          {/* Desktop Navigation */
-          }
-          <div className="hidden md:flex items-center gap-4">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-4 col-start-3 justify-self-end">
             <LanguageSelector />
             <a
               href="/"
