@@ -228,14 +228,14 @@ export default function HomePage() {
 
   return (
     <main className="min-h-dvh bg-white text-gray-900" suppressHydrationWarning>
-      {/* Just Launched Banner - Very Top */}
-      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-200 p-3">
-        <div className="flex items-center justify-center gap-3">
-          <div className="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-full text-sm font-medium animate-bounce">
-            🎉 Just Launched!
+      {/* Flashy New Feature Banner */}
+      <div className="bg-gradient-to-r from-pink-50 to-purple-50 border-b border-pink-200 p-3">
+        <div className="mx-auto max-w-xl flex items-center justify-center gap-3">
+          <div className="bg-pink-100 text-pink-800 px-3 py-1.5 rounded-full text-sm font-medium animate-bounce">
+            ✨ New Feature!
           </div>
-          <a href="/analytics" className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg animate-pulse hover:shadow-xl transition-all duration-300">
-            📊 Analytics Dashboard
+          <a href="/company" className="bg-gradient-to-r from-fuchsia-500 to-indigo-600 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg animate-pulse hover:shadow-xl transition-all duration-300">
+            🏢 Swachhata Against Bad Service — Try Now
           </a>
         </div>
       </div>
