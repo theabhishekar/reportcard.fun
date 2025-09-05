@@ -12,45 +12,41 @@ export function MobileNavigation() {
   const [taxCroreCount, setTaxCroreCount] = useState<number | null>(null)
   const [isDeathsOpen, setIsDeathsOpen] = useState(false)
   const [isDebtOpen, setIsDebtOpen] = useState(false)
+  const [isTaxOpen, setIsTaxOpen] = useState(false)
   const deathsRef = useRef<HTMLDivElement | null>(null)
   const deathsMobileRef = useRef<HTMLDivElement | null>(null)
   const debtRef = useRef<HTMLDivElement | null>(null)
   const debtMobileRef = useRef<HTMLDivElement | null>(null)
+  const taxRef = useRef<HTMLDivElement | null>(null)
 
   // Header counters derived from global time (deterministic, not session-based)
   useEffect(() => {
-    // Deaths: year-to-date based on an annual estimate
-    // All-time style counter: count from a fixed historical epoch
-    const DEATH_BASE_TIME = Date.UTC(2000, 0, 1, 0, 0, 0) // Jan 1, 2000 UTC
+    // All counters use the same baseline date for consistency
+    const BASE_TIME = Date.UTC(2024, 3, 1, 0, 0, 0) // Apr 1, 2024 UTC (FY 2024-25 start)
+    const SINCE_LABEL = "since Apr 1, 2024"
+
+    // Deaths: based on annual estimate
     const DEATHS_PER_YEAR = 172000 // India approx annual road deaths (recent years)
-    const DEATH_BASE_COUNT = 0 // baseline at epoch; adjust if you have a historical cumulative number
+    const DEATH_BASE_COUNT = 0 // baseline at epoch
     const DEATHS_PER_SEC = DEATHS_PER_YEAR / (365 * 24 * 60 * 60)
 
     // Debt: baseline at a known time (in crores)
-    const DEBT_BASE_TIME = Date.UTC(2024, 2, 31, 0, 0, 0) // Mar 31, 2024 UTC
-    const DEBT_BASE_CRORE = 181680000
+    const DEBT_BASE_CRORE = 181680000 // Mar 31, 2024 baseline
     const DEBT_PER_SEC_CRORE = 0.00419 // ≈ ₹41,900 per second
 
-    const formatNum = (n: number) => n.toLocaleString('en-IN')
-    const formatDebt = (n: number) => `₹${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr`
-    const DEATH_SINCE_LABEL = `since ${new Date(DEATH_BASE_TIME).getUTCFullYear()}`
-
-    // Tax counter for current financial year (India: Apr 1 → Mar 31)
-    const nowDate = new Date()
-    const fyStartYear = (nowDate.getUTCMonth() >= 3) ? nowDate.getUTCFullYear() : nowDate.getUTCFullYear() - 1
-    const TAX_BASE_TIME = Date.UTC(fyStartYear, 3, 1, 0, 0, 0) // Apr 1, FY start
-    const TAX_SINCE_LABEL = `since Apr 1, ${fyStartYear}`
-    const secondsInYear = 365 * 24 * 60 * 60
-    const TAX_PER_YEAR_CRORE = 3400000 // ~₹34 lakh crore across the FY (approx)
-    const TAX_PER_SEC_CRORE = TAX_PER_YEAR_CRORE / secondsInYear
+    // Tax: based on annual collection estimate (more accurate)
+    const TAX_PER_YEAR_CRORE = 3000000 // ~₹30 lakh crore annually (more realistic)
+    const TAX_PER_SEC_CRORE = TAX_PER_YEAR_CRORE / (365 * 24 * 60 * 60)
 
     let lastShownDeaths = -1
     let lastBumpedAt = Date.now()
 
     const update = () => {
       const now = Date.now()
-      const deathElapsedSec = Math.max(0, Math.floor((now - DEATH_BASE_TIME) / 1000))
-      const ytdDeathsExact = DEATH_BASE_COUNT + DEATHS_PER_SEC * deathElapsedSec
+      const elapsedSec = Math.max(0, (now - BASE_TIME) / 1000)
+      
+      // Deaths calculation
+      const ytdDeathsExact = DEATH_BASE_COUNT + DEATHS_PER_SEC * elapsedSec
       let ytdDeaths = Math.floor(ytdDeathsExact)
 
       // Visibility tweak: ensure at least one visible increment every ~60s
@@ -73,10 +69,12 @@ export function MobileNavigation() {
         ytdDeaths = lastShownDeaths
       }
 
-      const debtElapsedSec = Math.max(0, (now - DEBT_BASE_TIME) / 1000)
-      const liveDebtCrore = DEBT_BASE_CRORE + DEBT_PER_SEC_CRORE * debtElapsedSec
-      const taxElapsedSec = Math.max(0, (now - TAX_BASE_TIME) / 1000)
-      const liveTaxCrore = TAX_PER_SEC_CRORE * taxElapsedSec
+      // Debt calculation (adjusted for Jan 1, 2024 baseline)
+      const debtElapsedFromMar31 = Math.max(0, (now - Date.UTC(2024, 2, 31, 0, 0, 0)) / 1000)
+      const liveDebtCrore = DEBT_BASE_CRORE + DEBT_PER_SEC_CRORE * debtElapsedFromMar31
+      
+      // Tax calculation
+      const liveTaxCrore = TAX_PER_SEC_CRORE * elapsedSec
 
       setDeathsCount(ytdDeaths)
       setDebtCroreCount(liveDebtCrore)
@@ -104,16 +102,21 @@ export function MobileNavigation() {
         const insideMobileDebt = debtMobileRef.current && debtMobileRef.current.contains(target)
         if (!insideDesktopDebt && !insideMobileDebt) setIsDebtOpen(false)
       }
+      // tax
+      if (isTaxOpen) {
+        const insideTax = taxRef.current && taxRef.current.contains(target)
+        if (!insideTax) setIsTaxOpen(false)
+      }
     }
     document.addEventListener('mousedown', onDocClick)
     return () => document.removeEventListener('mousedown', onDocClick)
-  }, [isDeathsOpen, isDebtOpen])
+  }, [isDeathsOpen, isDebtOpen, isTaxOpen])
 
   return (
     <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
       <div className="mx-auto max-w-7xl px-4 py-3">
-        <nav className="relative grid grid-cols-4 items-center">
-          <div className="flex items-center gap-6 col-start-1">
+        <nav className="relative grid grid-cols-3 items-center">
+          <div className="flex items-center gap-4 col-start-1">
             <a
               href="/"
               className="text-lg font-semibold text-gray-900 hover:text-gray-700 transition-colors"
@@ -121,6 +124,43 @@ export function MobileNavigation() {
               reportcard.fun
               <span className="text-sm font-normal text-gray-600 ml-2 hidden sm:inline">(Civic Issue Reporter)</span>
             </a>
+            {/* Tax counter moved to left section */}
+            <div ref={taxRef} className="hidden md:flex flex-col items-center text-xs relative">
+              <button
+                type="button"
+                onClick={() => setIsTaxOpen((v) => !v)}
+                className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded border border-gray-200 hover:bg-gray-100"
+                aria-haspopup="dialog"
+                aria-expanded={isTaxOpen}
+                aria-label="Tax collection info"
+              >
+                <span className="text-gray-600">₹</span>
+                <span className="text-gray-800">Tax:</span>
+                <span className="text-black font-semibold">{taxCroreCount !== null ? `₹${taxCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
+              </button>
+              <div className="text-[10px] text-gray-500 mt-0.5">since Apr 1, 2024</div>
+
+              {isTaxOpen && (
+                <div
+                  role="dialog"
+                  aria-label="Tax collection information"
+                  className="absolute left-0 top-full mt-2 w-96 max-w-[85vw] rounded-lg border border-blue-200 bg-white shadow-xl p-3 z-50"
+                >
+                  <div className="text-xs leading-relaxed text-gray-800">
+                    <div className="font-semibold text-blue-700 mb-1">Tax collection keeps growing</div>
+                    <ul className="list-disc ml-4 space-y-1">
+                      <li><span className="font-medium">~₹30 lakh crore/yr collected</span> — across all taxes (GST, income, corporate, etc.).</li>
+                      <li><span className="font-medium">GST dominates</span> — largest single source of government revenue.</li>
+                      <li><span className="font-medium">Why it grows</span> — economic growth, better compliance, digital systems.</li>
+                      <li><span className="font-medium">What it funds</span> — infrastructure, defense, subsidies, social programs.</li>
+                    </ul>
+                    <div className="mt-2 text-[11px] text-gray-600">
+                      Based on recent budget data. Figures are directional and auto-updating for awareness.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           
           {/* Mobile deaths chip centered in the top bar */}
@@ -139,7 +179,7 @@ export function MobileNavigation() {
                   <span className="text-gray-800">Deaths:</span>
                   <span className="hdr-deaths text-black font-semibold">{deathsCount !== null ? deathsCount.toLocaleString('en-IN') : '—'}</span>
                 </div>
-                <div className="text-[10px] text-gray-500">since 2000</div>
+                <div className="text-[10px] text-gray-500">since Apr 1, 2024</div>
               </div>
             </button>
 
@@ -179,7 +219,7 @@ export function MobileNavigation() {
               <span className="text-gray-800">Debt:</span>
               <span className="hdr-debt text-black font-semibold">{debtCroreCount !== null ? `₹${debtCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
             </button>
-            <div className="text-[10px] text-gray-500 text-center mt-0.5">since Mar 31, 2024</div>
+            <div className="text-[10px] text-gray-500 text-center mt-0.5">since Apr 1, 2024</div>
 
             {isDebtOpen && (
               <div
@@ -204,7 +244,7 @@ export function MobileNavigation() {
           </div>
 
           {/* Center counters in top bar */}
-          <div className="hidden md:flex items-center gap-3 text-xs col-start-2 col-span-2 justify-self-center">
+          <div className="hidden md:flex items-center gap-3 text-xs col-start-2 justify-self-center">
             {/* Deaths chip with popover */}
             <div ref={deathsRef} className="relative flex flex-col items-center">
               <button
@@ -219,7 +259,7 @@ export function MobileNavigation() {
                 <span className="text-gray-800">Deaths:</span>
                 <span id="hdr-deaths" className="text-black font-semibold">{deathsCount !== null ? deathsCount.toLocaleString('en-IN') : '—'}</span>
               </button>
-              <div className="text-[10px] text-gray-500 mt-0.5">since 2000</div>
+              <div className="text-[10px] text-gray-500 mt-0.5">since Apr 1, 2024</div>
 
               {isDeathsOpen && (
                 <div
@@ -257,7 +297,7 @@ export function MobileNavigation() {
                 <span className="text-gray-800">Debt:</span>
                 <span className="hdr-debt text-black font-semibold">{debtCroreCount !== null ? `₹${debtCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
               </button>
-              <div className="text-[10px] text-gray-500 mt-0.5">since Mar 31, 2024</div>
+              <div className="text-[10px] text-gray-500 mt-0.5">since Apr 1, 2024</div>
               
               {isDebtOpen && (
                 <div
@@ -281,19 +321,10 @@ export function MobileNavigation() {
               )}
             </div>
             
-            {/* Tax counter (desktop) */}
-            <div className="flex flex-col items-center text-xs">
-              <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded border border-gray-200">
-                <span className="text-gray-600">₹</span>
-                <span className="text-gray-800">Tax:</span>
-                <span className="text-black font-semibold">{taxCroreCount !== null ? `₹${taxCroreCount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Cr` : '—'}</span>
-              </div>
-              <div className="text-[10px] text-gray-500 mt-0.5">since Apr 1 (FY)</div>
-            </div>
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-4 col-start-4 justify-self-end">
+          <div className="hidden md:flex items-center gap-4 col-start-3 justify-self-end">
             <LanguageSelector />
             <a
               href="/"
