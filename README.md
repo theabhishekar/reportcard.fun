@@ -1,7 +1,3 @@
-# 🏛️ Civic Issues Database
-
-A **free, unlimited database** for civic issues using GitHub Issues with automated analytics and community insights.
-
 ## 🎯 What This Is
 
 This repository serves as a **centralized database** for all civic issue reports from [reportcard.fun](https://reportcard.fun). Instead of expensive backend infrastructure, we use **GitHub Issues as a free database** with automated analytics processing.
