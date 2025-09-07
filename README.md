@@ -1,5 +1,7 @@
 # 🏛️ Civic Issues Database
 
+[![Star History Chart](https://api.star-history.com/svg?repos=ScienceArtist/reportcard.fun&type=Date)](https://star-history.com/#ScienceArtist/reportcard.fun&Date)
+
 A **free, unlimited database** for civic issues using GitHub Issues with automated analytics and community insights.
 
 ## 🎯 What This Is
