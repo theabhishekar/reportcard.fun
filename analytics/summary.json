@@ -1,0 +1,291 @@
+{
+  "totalReports": 140,
+  "openReports": 140,
+  "closedReports": 0,
+  "issueTypes": {
+    "Pothole": 1
+  },
+  "locations": {
+    "Greater Noida, Uttar Pradesh": 1
+  },
+  "dailyActivity": {
+    "2025-09-06": 4,
+    "2025-09-05": 13,
+    "2025-09-04": 52,
+    "2025-09-03": 71
+  },
+  "userActivity": {
+    "ScienceArtist": 140
+  },
+  "recentActivity": [
+    {
+      "id": 140,
+      "date": "2025-09-06T20:03:44Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 139,
+      "date": "2025-09-06T13:48:06Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 138,
+      "date": "2025-09-06T03:16:16Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 137,
+      "date": "2025-09-06T03:03:23Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 136,
+      "date": "2025-09-05T13:05:46Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 135,
+      "date": "2025-09-05T12:10:07Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 134,
+      "date": "2025-09-05T12:03:30Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 133,
+      "date": "2025-09-05T11:29:27Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 132,
+      "date": "2025-09-05T11:26:11Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 131,
+      "date": "2025-09-05T11:22:49Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 130,
+      "date": "2025-09-05T10:32:13Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 129,
+      "date": "2025-09-05T08:44:54Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 128,
+      "date": "2025-09-05T07:01:41Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 127,
+      "date": "2025-09-05T04:57:49Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 126,
+      "date": "2025-09-05T04:08:39Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 125,
+      "date": "2025-09-05T04:08:04Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 124,
+      "date": "2025-09-05T03:34:07Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 123,
+      "date": "2025-09-04T23:14:04Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 122,
+      "date": "2025-09-04T20:58:34Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 121,
+      "date": "2025-09-04T18:55:41Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 120,
+      "date": "2025-09-04T17:46:05Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 119,
+      "date": "2025-09-04T17:29:11Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 118,
+      "date": "2025-09-04T16:16:59Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 117,
+      "date": "2025-09-04T16:16:40Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 116,
+      "date": "2025-09-04T15:08:53Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 115,
+      "date": "2025-09-04T14:47:08Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 114,
+      "date": "2025-09-04T13:19:45Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 113,
+      "date": "2025-09-04T11:57:25Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 112,
+      "date": "2025-09-04T11:57:15Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 111,
+      "date": "2025-09-04T11:00:17Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 110,
+      "date": "2025-09-04T10:29:12Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 109,
+      "date": "2025-09-04T09:57:16Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 108,
+      "date": "2025-09-04T09:00:49Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 107,
+      "date": "2025-09-04T06:54:54Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 106,
+      "date": "2025-09-04T06:54:53Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 105,
+      "date": "2025-09-04T06:52:36Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 104,
+      "date": "2025-09-04T06:45:37Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 103,
+      "date": "2025-09-04T06:45:27Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 102,
+      "date": "2025-09-04T06:37:14Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 101,
+      "date": "2025-09-04T06:34:39Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 100,
+      "date": "2025-09-04T06:34:37Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 99,
+      "date": "2025-09-04T06:34:17Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 98,
+      "date": "2025-09-04T06:34:17Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 97,
+      "date": "2025-09-04T06:22:05Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 96,
+      "date": "2025-09-04T06:06:37Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 95,
+      "date": "2025-09-04T06:06:33Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 94,
+      "date": "2025-09-04T06:05:37Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 93,
+      "date": "2025-09-04T05:50:16Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 92,
+      "date": "2025-09-04T05:41:09Z",
+      "user": "ScienceArtist"
+    },
+    {
+      "id": 91,
+      "date": "2025-09-04T05:40:55Z",
+      "user": "ScienceArtist"
+    }
+  ],
+  "generatedAt": "2025-09-07T12:13:22.752Z",
+  "topIssueTypes": [
+    [
+      "Pothole",
+      1
+    ]
+  ],
+  "topLocations": [
+    [
+      "Greater Noida, Uttar Pradesh",
+      1
+    ]
+  ],
+  "topUsers": [
+    [
+      "ScienceArtist",
+      140
+    ]
+  ]
+}
