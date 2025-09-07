@@ -1,13 +1,7 @@
 #!/usr/bin/env node
 
-const { Octokit } = require('@octokit/rest');
 const fs = require('fs').promises;
 const path = require('path');
-
-// Initialize GitHub client
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
-});
 
 const REPO_OWNER = 'ScienceArtist';
 const REPO_NAME = 'civic-issues-database';
@@ -20,22 +14,28 @@ async function fetchAllIssues() {
   
   while (true) {
     try {
-      const response = await octokit.issues.listForRepo({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        state: 'all',
-        per_page: 100,
-        page: page,
+      const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=all&per_page=100&page=${page}`;
+      const res = await fetch(url, {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'reportcard.fun-analytics-script',
+          ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
+        }
       });
-      
-      if (response.data.length === 0) break;
-      
-      allIssues = allIssues.concat(response.data);
-      console.log(`Fetched page ${page}: ${response.data.length} issues`);
+
+      if (!res.ok) {
+        throw new Error(`GitHub API error ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) break;
+
+      allIssues = allIssues.concat(data);
+      console.log(`Fetched page ${page}: ${data.length} issues`);
       page++;
-      
-      // Rate limiting
-      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Rate limiting safety
+      await new Promise(resolve => setTimeout(resolve, 500));
     } catch (error) {
       console.error('Error fetching issues:', error);
       break;
