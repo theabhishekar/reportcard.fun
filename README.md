@@ -1,7 +1,5 @@
 # 🏛️ Civic Issues Database
 
-[![Star History Chart](https://api.star-history.com/svg?repos=ScienceArtist/reportcard.fun&type=Date)](https://star-history.com/#ScienceArtist/reportcard.fun&Date)
-
 A **free, unlimited database** for civic issues using GitHub Issues with automated analytics and community insights.
 
 ## 🎯 What This Is
@@ -181,3 +179,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 📊 [Analytics Dashboard](https://github.com/ScienceArtist/civic-issues-database/blob/main/analytics/summary.md)
 - 🚀 [Setup Guide](GITHUB_SETUP.md)
 - 💰 [Support the Project](https://buymeacoffee.com/mehonestperson)
+
+---
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ScienceArtist/reportcard.fun&type=Date)](https://star-history.com/#ScienceArtist/reportcard.fun&Date)
