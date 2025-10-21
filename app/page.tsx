@@ -20,7 +20,7 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import { LeaderPhotoInput } from "@/components/leader-photo-input"
 import { ImageInput } from "@/components/image-input"
-import { getLocationFromImageOrDevice } from "@/lib/location"
+import { getLocationFromImageOrDevice, reverseGeocode } from "@/lib/location"
 import { CertificateCanvas } from "@/components/certificate-canvas"
 import { saveReport } from "@/lib/storage"
 import { SocialShare } from "@/components/social-share"
@@ -28,6 +28,7 @@ import { EmailRTIOptions } from "@/components/email-rti-options"
 import { AnalyticsDashboard } from "@/components/analytics-dashboard"
 import { githubStorage } from "@/lib/github-storage"
 import { HeaderCounters } from "@/components/header-counters"
+import { MapPin, Loader2 } from "lucide-react"
 
 // Utility function to generate UUID that works in all browsers
 function generateUUID(): string {
@@ -72,6 +73,7 @@ export default function HomePage() {
   const [localDateTime, setLocalDateTime] = useState<string>("")
   const [isLocLoading, setIsLocLoading] = useState(false)
   const [isClient, setIsClient] = useState(false) // Add client-side flag
+  const [isGeoLoading, setIsGeoLoading] = useState(false)
   // For top right leaders
   const [selectedLeaders, setSelectedLeaders] = useState<string[]>([]) // Start with no leaders selected
   // For CM custom image
@@ -200,7 +202,7 @@ export default function HomePage() {
         userId: 'anonymous',
         reportUrl: url,
         locationMapUrl: locationMapUrl || undefined,
-        footerCreditName: creditName || "Made with ❤️ by @Mehonestperson"
+        footerCreditName: creditName || undefined
       }
 
       const result = await githubStorage.storeReport(report)
@@ -318,14 +320,50 @@ export default function HomePage() {
 
             <div className="grid gap-2">
               <Label htmlFor="location-text">{t.translations.locationLabel}</Label>
-              <Input
-                id="location-text"
-                placeholder="e.g., MG Road, Bengaluru"
-                value={locText}
-                onChange={(e) => setLocText(e.target.value)}
-              />
+              <div className="relative flex items-center gap-2">
+                <Input
+                  id="location-text"
+                  placeholder="e.g., MG Road, Bengaluru"
+                  value={locText}
+                  onChange={(e) => setLocText(e.target.value)}
+                />
+                <button
+                  type="button"
+                  aria-label="Detect my location"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-300 hover:bg-gray-50 text-gray-700"
+                  onClick={async () => {
+                    if (!navigator.geolocation) {
+                      alert('Geolocation is not supported by your browser.');
+                      return;
+                    }
+                    setIsGeoLoading(true);
+                    navigator.geolocation.getCurrentPosition(async (pos) => {
+                      const { latitude, longitude } = pos.coords;
+                      setCoords({ lat: latitude, lng: longitude });
+                      // Reverse geocode to a human-readable place
+                      try {
+                        const pretty = await reverseGeocode(latitude, longitude)
+                        setLocText(pretty)
+                      } catch {
+                        setLocText(`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`)
+                      }
+                      setIsGeoLoading(false);
+                    }, (err) => {
+                      console.error('Geolocation error', err);
+                      setIsGeoLoading(false);
+                      alert('Could not detect your location. Please allow location access or enter it manually.');
+                    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+                  }}
+                >
+                  {isGeoLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <MapPin className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               <p className="text-xs text-gray-600">
-                Optional. We try to read GPS from the photo’s EXIF; you can refine or leave blank.
+                Optional. We try to read GPS from the photo’s EXIF; you can refine or click the pin to auto-detect.
               </p>
             </div>
 
@@ -595,17 +633,7 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Footer: tiny support & contribute links */}
-      <footer className="mt-8 text-center text-xs text-gray-500">
-        <div className="mx-auto max-w-xl px-4 py-3">
-          <span className="mr-2">☕</span>
-          <a href="https://buymeacoffee.com/mehonestperson?status=1" target="_blank" rel="noopener noreferrer" className="underline">Support</a>
-          <span className="mx-2">·</span>
-          <a href="https://github.com/ScienceArtist/reportcard.fun/issues" target="_blank" rel="noopener noreferrer" className="underline">Report Issue</a>
-          <span className="mx-2">·</span>
-          <a href="https://github.com/ScienceArtist/reportcard.fun" target="_blank" rel="noopener noreferrer" className="underline">Star on GitHub</a>
-        </div>
-      </footer>
+      {/* Footer: support & contribute links removed per request */}
 
 
       {/* Community Insights removed per request */}
@@ -622,17 +650,7 @@ export default function HomePage() {
             Platform operated under IT Act 2000, Section 79
           </p>
         </div>
-        <p>
-          Made with ❤️ by{" "}
-          <a
-            href="https://twitter.com/Mehonestperson"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 font-medium"
-          >
-            @Mehonestperson
-          </a>
-        </p>
+        {/* Removed credit line per request */}
       </footer>
     </main>
   )

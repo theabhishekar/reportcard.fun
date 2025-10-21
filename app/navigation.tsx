@@ -123,7 +123,7 @@ export function MobileNavigation() {
               href="/"
               className="text-lg font-semibold text-gray-900 hover:text-gray-700 transition-colors"
             >
-              reportcard.fun
+              Civicwatch.in
               <span className="text-sm font-normal text-gray-600 ml-2 hidden sm:inline">(Civic Issue Reporter)</span>
             </a>
             {/* Tax counter moved to left section - desktop only */}

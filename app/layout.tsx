@@ -12,12 +12,12 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Civic Issue Reporting App',
-  description: 'A modern web application for reporting and tracking civic issues in your community. Created by Chandravijay Agrawal.',
+  description: 'A modern web application for reporting and tracking civic issues in your community. Created by Abhishekar.',
   generator: 'Next.js',
-  authors: [{ name: 'Chandravijay Agrawal', url: 'https://twitter.com/Mehonestperson' }],
+  authors: [{ name: 'Abhishekar', url: 'https://abhishekardev.vercel.app/about' }],
   keywords: ['civic issues', 'community reporting', 'government accountability', 'public service'],
-  creator: 'Chandravijay Agrawal',
-  publisher: 'Chandravijay Agrawal',
+  creator: 'Abhishekar',
+  publisher: 'Abhishekar',
 }
 
 export default function RootLayout({
