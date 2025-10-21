@@ -1,6 +1,6 @@
 ## 🎯 What This Is
 
-This repository serves as a **centralized database** for all civic issue reports from [reportcard.fun](https://reportcard.fun). Instead of expensive backend infrastructure, we use **GitHub Issues as a free database** with automated analytics processing.
+This repository serves as a **centralized database** for all civic issue reports from [civicwatchin] (https://civicwatchin.netlify.app/). Instead of expensive backend infrastructure, we use **GitHub Issues as a free database** with automated analytics processing.
 
 ## 🚀 Features
 
@@ -47,7 +47,7 @@ The system automatically generates:
 ## 🚀 Getting Started
 
 ### For Users
-1. **Visit [reportcard.fun](https://reportcard.fun)**
+1. **Visit [civicwatchin](https://civicwatchin.netlify.app/)**
 2. **Report a civic issue** (pothole, garbage, etc.)
 3. **Generate certificate** with photo and location
 4. **Your report is automatically stored** in this database
@@ -166,16 +166,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **This system gives you enterprise-level analytics capabilities at $0/month cost!** 🎯
 
-*Made with ❤️ by [@Mehonestperson](https://twitter.com/Mehonestperson)*
 
 ---
 
 **🔗 Links:**
-- 🌐 [Live App](https://reportcard.fun)
-- 📊 [Analytics Dashboard](https://github.com/ScienceArtist/civic-issues-database/blob/main/analytics/summary.md)
+- 🌐 [Live App](https://civicwatchin.netlify.app/)
+- 📊 [Analytics Dashboard]
 - 🚀 [Setup Guide](GITHUB_SETUP.md)
-- 💰 [Support the Project](https://buymeacoffee.com/mehonestperson)
 
 ---
-
-[![Star History Chart](https://api.star-history.com/svg?repos=ScienceArtist/reportcard.fun&type=Date)](https://star-history.com/#ScienceArtist/reportcard.fun&Date)
